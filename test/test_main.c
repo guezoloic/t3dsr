@@ -10,6 +10,6 @@ int main() {
     lenVector3_test();
     normVector3_test();
     distVector3_test();
-    printf("All Vector4 tests succeeded\n");
+    printf("All Vector3 tests succeeded\n");
     return 0;
 }
