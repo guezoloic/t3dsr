@@ -1,25 +1,30 @@
 EXE = t3dsr
+TEXE = t3dsr_test
 
 INC = include
 SRC = src
 TST = test
 BLD = build
 
-DEBUG_DIR = $(BLD)/debug
+DDIR = $(BLD)/debug
+TDIR = $(BLD)/test
 
 CC = clang
 CFLAGS = -Wall -Wextra -I$(INC) -g
 
-SRCS = $(shell find $(SRC) -name "*.c")
-OBJS = $(SRCS:$(SRC)/%.c=$(DEBUG_DIR)/%.o)
-	
-$(EXE): $(OBJS) | $(DEBUG_DIR)
+SRCS := $(shell find $(SRC) -name "*.c")
+OBJS := $(SRCS:$(SRC)/%.c=$(DDIR)/%.o)
+
+all: $(EXE)
+.PHONY: all
+
+$(EXE): $(OBJS) | $(DDIR)
 	@$(CC) $^ -o $(BLD)/$@
 
-$(DEBUG_DIR):
-	@mkdir -p $(DEBUG_DIR)
+$(DDIR):
+	@mkdir -p $(DDIR)
 
-$(DEBUG_DIR)/%.o: $(SRC)/%.c | $(DEBUG_DIR)
+$(DDIR)/%.o: $(SRC)/%.c | $(DDIR)
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
@@ -29,6 +34,22 @@ clean:
 run: $(EXE)
 	@./$(BLD)/$(EXE)
 
-all: $(EXE)
+TSRCS := $(shell find $(TST) -name "*.c")
+TOBJS := $(TSRCS:$(TST)/%.c=$(TDIR)/%.o) \
+	$(filter-out $(DDIR)/main.o, $(OBJS))
 
-.PHONY: all clean run 
+debug:
+	@echo "$(OBJS)\n$(TOBJS)"
+
+$(TDIR)/%.o: $(TST)/%.c | $(TDIR)
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(TDIR):
+	@mkdir -p $(TDIR)
+
+$(TEXE): $(TOBJS) | $(TDIR) $(DDIR)
+	@$(CC) $^ -o $(BLD)/$@
+
+test: $(TEXE)
+	@./$(BLD)/$(TEXE)
