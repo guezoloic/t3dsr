@@ -54,7 +54,7 @@ Vec4* vec4Norm(Vec4* v)
     if (length == 0.f) return vec4(0, 0, 0, 0);
 
     float invLength = 1.f / length;
-    return vec4(v->x * invLength, v->y * invLength, v->z * invLength, v->w * invLength);
+    return vec4Scale(v, invLength);
 }
 
 Vec4* vec4Lerp(Vec4* a, Vec4* b, float t)
@@ -85,19 +85,26 @@ Vec4* vec4Proj(Vec4* a, Vec4* b)
     float dotAB = vec4Dot(a, b);
     float lenB2 = vec4Dot(b, b);
     float scale = dotAB / lenB2;
-    return vec4(b->x * scale, b->y * scale, b->z * scale, 0); 
+    return vec4Scale(b, scale); 
 }
 
 Vec4* vec4Refl(Vec4* v, Vec4* normal)
 {
     if (!v || !normal) return NULL;
     Vec4* proj = vec4Proj(v, normal);
-    return vec4Sub(v, vec4Scale(proj, 2.f)); 
+    Vec4* scal = vec4Scale(proj, 2.f);
+    Vec4* rlt = vec4Sub(v, scal);
+    vec4Free(proj);
+    vec4Free(scal);
+    return rlt; 
 }
 
 float vec4Dist(Vec4* a, Vec4* b)
 {
-    return vec4Len(vec4Sub(a, b));
+    Vec4* vsub = vec4Sub(a, b);
+    float rlt = vec4Len(vsub);
+    vec4Free(vsub);
+    return rlt;
 }
 
 void vec4Free(Vec4* v) 
