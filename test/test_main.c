@@ -6,32 +6,32 @@ int main() {
 
     // --- Vector3 ---
     
-    void addVector3_test();
-    void subVector3_test();
-    void scaleVector3_test();
-    void dotVector3_test();
-    void lenVector3_test();
-    void normVector3_test();
-    void lerpVector3_test();
-    void anglVector3_test();
-    void projVector3_test();
-    void reflVector3_test();
-    void distVector3_test();
+    addVector3_test();
+    subVector3_test();
+    scaleVector3_test();
+    dotVector3_test();
+    lenVector3_test();
+    normVector3_test();
+    lerpVector3_test();
+    anglVector3_test();
+    projVector3_test();
+    reflVector3_test();
+    distVector3_test();
     printf("All Vector3 tests succeeded\n");
 
     // --- Vector4 ---
     
-    void addVector4_test();
-    void subVector4_test();
-    void scaleVector4_test();
-    void dotVector4_test();
-    void lenVector4_test();
-    void normVector4_test();
-    void lerpVector4_test();
-    void anglVector4_test();
-    void projVector4_test();
-    void reflVector4_test();
-    void distVector4_test();
+    addVector4_test();
+    subVector4_test();
+    scaleVector4_test();
+    dotVector4_test();
+    lenVector4_test();
+    normVector4_test();
+    lerpVector4_test();
+    anglVector4_test();
+    projVector4_test();
+    reflVector4_test();
+    distVector4_test();
     printf("All Vector4 tests succeeded\n");
 
     printf("All tests succeeded\n");
