@@ -53,7 +53,7 @@ Vec3* vec3Norm(Vec3* v)
     if (length == 0.f) return vec3(0, 0, 0);
 
     float invLength = 1.f / length;
-    return vec3(v->x * invLength, v->y * invLength, v->z * invLength);
+    return vec3Scale(v, invLength);
 }
 
 Vec3* vec3Lerp(Vec3* a, Vec3* b, float t)
@@ -90,18 +90,26 @@ Vec3* vec3Proj(Vec3* a, Vec3* b)
     float dotAB = vec3Dot(a, b);
     float lenB2 = vec3Dot(b, b);
     float scale = dotAB / lenB2;
-    return vec3(b->x * scale, b->y * scale, b->z * scale);
+    return vec3Scale(b, scale);
 }
 
 Vec3* vec3Refl(Vec3* v, Vec3* normal)
 {
+    if (!v || !normal) return NULL;
     Vec3* proj = vec3Proj(v, normal);
-    return vec3Sub(v, vec3Scale(proj, 2.f)); 
+    Vec3* scal = vec3Scale(proj, 2.f);
+    Vec3* rlt = vec3Sub(v, scal);
+    vec3Free(proj);
+    vec3Free(scal);
+    return rlt; 
 }
 
 float vec3Dist(Vec3* a, Vec3* b)
 {
-    return vec3Len(vec3Sub(a, b));
+    Vec3* vsub = vec3Sub(a, b);
+    float rlt = vec3Len(vsub);
+    vec3Free(vsub);
+    return rlt;
 }
 
 Vec3* vec3Rotate(Vec3* v, Vec3* axis, float angle)
@@ -110,13 +118,22 @@ Vec3* vec3Rotate(Vec3* v, Vec3* axis, float angle)
     float dot = vec3Dot(axis, v);
     Vec3* cross = vec3Cross(axis, v);
     
-    return vec3Add(
-        vec3Add(
-            vec3Scale(v, cosf(angle)), 
-            vec3Scale(cross, sinf(angle))
-        ),
-        vec3Scale(axis, dot * (1 - cosf(angle)))
-    );
+    Vec3* vscal = vec3Scale(v, cosf(angle));
+    Vec3* cscal = vec3Scale(cross, sinf(angle));
+    
+    Vec3* add = vec3Add(vscal, cscal);
+    Vec3* dscal = vec3Scale(axis, dot * (1 - cosf(angle)));
+
+    Vec3* rlt = vec3Add(add, dscal);
+
+    vec3Free(cross);
+    vec3Free(vscal);
+    vec3Free(cscal);
+    vec3Free(add);
+    vec3Free(dscal);
+
+    return rlt;
+
 }
 
 void vec3Free(Vec3* v) 
