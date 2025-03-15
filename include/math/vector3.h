@@ -5,6 +5,14 @@ typedef struct {
     float x, y, z;
 } Vec3;
 
+/**
+ * @brief   Creates a new 3D vector.
+ * @param   x   X-axis coordinate.
+ * @param   y   Y-axis coordinate.
+ * @param   z   Z-axis coordinate.
+ * @return  A pointer to the newly allocated 3D vector if 
+ *          successful, or NULL if the allocation fails.
+ */
 Vec3* vec3(float x, float y, float z);
 
 Vec3* vec3Add(Vec3* v1, Vec3* v2);
