@@ -14,6 +14,7 @@ void anglVector3_test();
 void projVector3_test();
 void reflVector3_test();
 void distVector3_test();
+void rotateVector3_test();
 
 // --- Vector4 ---
 

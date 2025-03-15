@@ -129,6 +129,23 @@ void distVector3_test() {
     printf("Finished distVector3_test!\n\n");
 }
 
+void rotateVector3_test() {
+    printf("Running RotateVector3_test...\n");
+
+    Vec3 v = {1.0f, 0.0f, 0.0f};
+    Vec3 axis = {0.0f, 0.0f, 1.0f};
+    float angle = M_PI / 2.0f;  
+    Vec3* result = vec3Rotate(&v, &axis, angle);
+    printVector3(result);
+
+    assert(fabs(result->x - 0.0f) < 0.0001f);
+    assert(fabs(result->y - 1.0f) < 0.0001f);
+    assert(fabs(result->z - 0.0f) < 0.0001f);
+
+    vec3Free(result);
+    printf("Finished RotateVector3_test!\n\n");
+}
+
 // --- Tests Vec4 ---
 
 void addVector4_test() {
