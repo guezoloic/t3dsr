@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+#define SUCCESS(X) printf("\n--------- All %s tests succeeded ---------\n\n", X);
+
 int main() {
 
     // --- Vector3 ---
@@ -17,7 +19,8 @@ int main() {
     projVector3_test();
     reflVector3_test();
     distVector3_test();
-    printf("All Vector3 tests succeeded\n");
+    rotateVector3_test();
+    SUCCESS("Vector3");
 
     // --- Vector4 ---
     
@@ -32,8 +35,8 @@ int main() {
     projVector4_test();
     reflVector4_test();
     distVector4_test();
-    printf("All Vector4 tests succeeded\n");
+    SUCCESS("Vector4");
 
-    printf("All tests succeeded\n");
+    SUCCESS("");
     return 0;
 }
