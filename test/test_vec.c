@@ -36,7 +36,7 @@ void subVector3_test() {
     printf("Finished subVector3_test!\n\n");
 }
 
-void scaleVector3_test() {
+void scalVector3_test() {
     printf("Running scaleVector3_test...\n");
     Vec3 a = {1, 2, 3};
     Vec3* r = vec3Scale(&a, 2);
@@ -87,6 +87,17 @@ void lerpVector3_test() {
     printf("Finished lerpVector3_test!\n\n");
 }
 
+void crosVector3_test() {
+    printf("Running crosVector3_test...\n");    
+    Vec3 a = {1, 0, 0};
+    Vec3 b = {0, 1, 0};
+    Vec3* r = vec3Cross(&a, &b);
+    printVector3(r);
+    assert(r->x == 0 && r->y == 0 && r->z == 1);
+    vec3Free(r);
+    printf("Finished crosVector3_test!\n\n");
+}
+
 void anglVector3_test() {
     printf("Running anglVector3_test...\n");
     Vec3 a = {1, 0, 0};
@@ -129,7 +140,7 @@ void distVector3_test() {
     printf("Finished distVector3_test!\n\n");
 }
 
-void rotateVector3_test() {
+void rotaVector3_test() {
     printf("Running RotateVector3_test...\n");
 
     Vec3 v = {1.0f, 0.0f, 0.0f};

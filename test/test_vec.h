@@ -5,16 +5,17 @@
 
 void addVector3_test();
 void subVector3_test();
-void scaleVector3_test();
+void scalVector3_test();
 void dotVector3_test();
 void lenVector3_test();
 void normVector3_test();
 void lerpVector3_test();
+void crosVector3_test();
 void anglVector3_test();
 void projVector3_test();
 void reflVector3_test();
 void distVector3_test();
-void rotateVector3_test();
+void rotaVector3_test();
 
 // --- Vector4 ---
 
