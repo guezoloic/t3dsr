@@ -35,14 +35,14 @@ Vec3* vec3Scale(Vec3* v, float scalar)
 
 float vec3Dot(Vec3* a, Vec3* b) 
 {
-    if (!a || !b) return 0;
+    if (!a || !b) return NAN;
     return a->x * b->x + a->y * b->y + a->z * b->z;
 }
 
 float vec3Len(Vec3* v)
 {
-    if (!v) return 0;
-    return sqrtf(vec3Dot(v, v));
+    if (!v) return NAN;
+    return sqrtf(v->x * v->x + v->y * v->y + v->z * v->z);
 }
 
 Vec3* vec3Norm(Vec3* v)
@@ -52,8 +52,7 @@ Vec3* vec3Norm(Vec3* v)
     float length = vec3Len(v);
     if (length == 0.f) return vec3(0, 0, 0);
 
-    float invLength = 1.f / length;
-    return vec3Scale(v, invLength);
+    return vec3Scale(v, 1.f / length);
 }
 
 Vec3* vec3Lerp(Vec3* a, Vec3* b, float t)
