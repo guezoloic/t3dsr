@@ -97,7 +97,7 @@ float vec3Angle(Vec3* a, Vec3* b)
 
 Vec3* vec3Proj(Vec3* a, Vec3* b)
 {
-
+    if (!a || !b) return NULL;
     float dotA = vec3Dot(a, b);
     float dotB = vec3Dot(b, b);
 

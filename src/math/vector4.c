@@ -1,5 +1,6 @@
 #include <math.h>
 #include <stdlib.h>
+#include <float.h>
 
 #include "math/vector4.h"
 
@@ -42,8 +43,8 @@ float vec4Dot(Vec4* a, Vec4* b)
 
 float vec4Len(Vec4* v)
 {
-    if (!v) return 0;
-    return sqrtf(vec4Dot(v, v));
+    if (!v) return NAN;
+    return sqrtf(v->x * v->x + v->y * v->y + v->z * v->z + v->w * v->w);
 }
 
 Vec4* vec4Norm(Vec4* v)
@@ -51,17 +52,15 @@ Vec4* vec4Norm(Vec4* v)
     if (!v) return NULL;
 
     float length = vec4Len(v);
-    if (length == 0.f) return vec4(0, 0, 0, 0);
+    if (length == 0.f) return NULL;
 
-    float invLength = 1.f / length;
-    return vec4Scale(v, invLength);
+    return vec4Scale(v, 1.f / length);
 }
 
 Vec4* vec4Lerp(Vec4* a, Vec4* b, float t)
 {
     if (!a || !b) return NULL;
-    if (t < 0.f) t = 0.f;
-    if (t > 1.f) t = 1.f;
+    t = fmaxf(0.f, fminf(t, 1.f));
 
     return vec4(
         a->x + t * (b->x - a->x),
@@ -73,27 +72,42 @@ Vec4* vec4Lerp(Vec4* a, Vec4* b, float t)
 
 float vec4Angle(Vec4* a, Vec4* b)
 {
-    float dot = vec4Dot(a, b);
     float lenA = vec4Len(a);    
     float lenB = vec4Len(b);
-    return acosf(dot / (lenA * lenB)); 
+
+    if (isnan(lenA) || isnan(lenB) 
+        || lenA < FLT_EPSILON
+        || lenB < FLT_EPSILON) 
+        return NAN;
+
+    float dot = vec4Dot(a, b);
+    float cosTheta = dot / (lenA * lenB);
+
+    cosTheta = fmaxf(-1.f, fminf(cosTheta, 1.f));
+
+    return acosf(cosTheta); 
 }
 
 Vec4* vec4Proj(Vec4* a, Vec4* b)
 {
     if (!a || !b) return NULL;
-    float dotAB = vec4Dot(a, b);
-    float lenB2 = vec4Dot(b, b);
-    float scale = dotAB / lenB2;
-    return vec4Scale(b, scale); 
+    float dotA = vec4Dot(a, b);
+    float dotB = vec4Dot(b, b);
+
+    if (dotB < FLT_EPSILON) return NULL;
+
+    float scale = dotA / dotB;
+    return vec4Scale(b, scale);
 }
 
 Vec4* vec4Refl(Vec4* v, Vec4* normal)
 {
     if (!v || !normal) return NULL;
+
     Vec4* proj = vec4Proj(v, normal);
     Vec4* scal = vec4Scale(proj, 2.f);
     Vec4* rlt = vec4Sub(v, scal);
+    
     vec4Free(proj);
     vec4Free(scal);
     return rlt; 
@@ -101,7 +115,9 @@ Vec4* vec4Refl(Vec4* v, Vec4* normal)
 
 float vec4Dist(Vec4* a, Vec4* b)
 {
+    if (!a || !b) return NAN;
     Vec4* vsub = vec4Sub(a, b);
+
     float rlt = vec4Len(vsub);
     vec4Free(vsub);
     return rlt;
