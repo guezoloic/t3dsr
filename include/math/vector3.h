@@ -114,10 +114,53 @@ Vec3* vec3Lerp(Vec3* a, Vec3* b, float t);
  *          Returns NULL if the allocation fails.
  */
 Vec3* vec3Cross(Vec3* a, Vec3* b);
+
+/**
+ * @brief   Computes the angle between two 3D vectors.
+ * @param   a Pointer to the first vector.
+ * @param   b Pointer to the second vector.
+ * @return  The angle between a and b in radians.
+ */
 float vec3Angle(Vec3* a, Vec3* b);
+
+/**
+ * @brief   Computes the projection of vector a onto vector b.
+ * @param   a Pointer to the vector to be projected.
+ * @param   b Pointer to the vector onto which a is projected.
+ * @return  A pointer to a newly allocated 3D vector representing 
+ *          the projection of a onto b.
+ *          Returns NULL if b is a zero vector.
+ */
 Vec3* vec3Proj(Vec3* a, Vec3* b);
+
+/**
+ * @brief   Computes the reflection of a vector v against a normal.
+ * @param   v Pointer to the incident vector.
+ * @param   normal Pointer to the normal vector of the surface.
+ * @return  A pointer to a newly allocated 3D vector representing 
+ *          the reflection of v across normal.
+ *          Returns NULL if normal is a zero vector.
+ */
 Vec3* vec3Refl(Vec3* v, Vec3* normal);
+
+/**
+ * @brief   Computes the Euclidean distance between two 3D vectors.
+ * @param   a Pointer to the first vector.
+ * @param   b Pointer to the second vector.
+ * @return  The scalar distance between a and b.
+ *          Returns NAN if either vector is NULL.
+ */
 float vec3Dist(Vec3* a, Vec3* b);
+
+/**
+ * @brief   Rotates a 3D vector around a given axis by a specified angle.
+ * @param   v Pointer to the vector to rotate.
+ * @param   axis Pointer to the rotation axis (must be normalized).
+ * @param   angle Rotation angle in radians.
+ * @return  A pointer to a newly allocated 3D vector representing 
+ *          the rotated vector.
+ *          Returns NULL if axis is a zero vector.
+ */
 Vec3* vec3Rotate(Vec3* v, Vec3* axis, float angle);
 
 void vec3Free(Vec3* v);
