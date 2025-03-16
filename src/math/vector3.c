@@ -112,11 +112,9 @@ Vec3* vec3Refl(Vec3* v, Vec3* normal)
     if (!v || !normal) return NULL;
 
     Vec3* proj = vec3Proj(v, normal);
-    if (!proj) return NULL;
-    
     Vec3* scal = vec3Scale(proj, 2.f);
-    
     Vec3* rlt = vec3Sub(v, scal);
+
     vec3Free(proj);
     vec3Free(scal);
     return rlt; 
@@ -126,7 +124,6 @@ float vec3Dist(Vec3* a, Vec3* b)
 {
     if (!a || !b) return NAN;
     Vec3* vsub = vec3Sub(a, b);
-    if (!vsub) return NAN;
 
     float rlt = vec3Len(vsub);
     vec3Free(vsub);
