@@ -1,5 +1,6 @@
 #include <math.h>
 #include <stdlib.h>
+#include <float.h>
 
 #include <math/vector3.h>
 
@@ -50,7 +51,7 @@ Vec3* vec3Norm(Vec3* v)
     if (!v) return NULL;
 
     float length = vec3Len(v);
-    if (length == 0.f) return vec3(0, 0, 0);
+    if (length == 0.f) return NULL;
 
     return vec3Scale(v, 1.f / length);
 }
@@ -58,9 +59,7 @@ Vec3* vec3Norm(Vec3* v)
 Vec3* vec3Lerp(Vec3* a, Vec3* b, float t)
 {
     if (!a || !b) return NULL;
-    if (t < 0.f) t = 0.f;
-    if (t > 1.f) t = 1.f;
-
+    t = fmaxf(0.f, fminf(t, 1.f));
     return vec3(
         a->x + t * (b->x - a->x),
         a->y + t * (b->y - a->y),
@@ -82,24 +81,41 @@ float vec3Angle(Vec3* a, Vec3* b)
 {
     float lenA = vec3Len(a);    
     float lenB = vec3Len(b);
-    if (!lenA || !lenB) return 0.f;
+
+    if (isnan(lenA) || isnan(lenB) 
+        || lenA < FLT_EPSILON
+        || lenB < FLT_EPSILON) 
+        return NAN;
+
     float dot = vec3Dot(a, b);
-    return acosf(dot / (lenA * lenB)); 
+    float cosTheta = dot / (lenA * lenB);
+
+    cosTheta = fmaxf(-1.f, fminf(cosTheta, 1.f));
+
+    return acosf(cosTheta); 
 }
 
 Vec3* vec3Proj(Vec3* a, Vec3* b)
 {
-    float dotAB = vec3Dot(a, b);
-    float lenB2 = vec3Dot(b, b);
-    float scale = dotAB / lenB2;
+
+    float dotA = vec3Dot(a, b);
+    float dotB = vec3Dot(b, b);
+
+    if (dotB < FLT_EPSILON) return NULL;
+
+    float scale = dotA / dotB;
     return vec3Scale(b, scale);
 }
 
 Vec3* vec3Refl(Vec3* v, Vec3* normal)
 {
     if (!v || !normal) return NULL;
+
     Vec3* proj = vec3Proj(v, normal);
+    if (!proj) return NULL;
+    
     Vec3* scal = vec3Scale(proj, 2.f);
+    
     Vec3* rlt = vec3Sub(v, scal);
     vec3Free(proj);
     vec3Free(scal);
@@ -108,42 +124,44 @@ Vec3* vec3Refl(Vec3* v, Vec3* normal)
 
 float vec3Dist(Vec3* a, Vec3* b)
 {
-    if (!a || !b) return 0;
+    if (!a || !b) return NAN;
     Vec3* vsub = vec3Sub(a, b);
+    if (!vsub) return NAN;
+
     float rlt = vec3Len(vsub);
     vec3Free(vsub);
     return rlt;
 }
 
-Vec3* vec3Rotate(Vec3* v, Vec3* axis, float angle)
+Vec3* vec3Rotate(Vec3* v, Vec3* axis, float angle) 
 {
     if (!v || !axis) return NULL;
     Vec3* normAxis = vec3Norm(axis);
-    if (!normAxis) return NULL;
 
     float dot = vec3Dot(normAxis, v);
     Vec3* cross = vec3Cross(normAxis, v);
     
     Vec3* vscal = vec3Scale(v, cosf(angle));
     Vec3* cscal = vec3Scale(cross, sinf(angle));
-    
+
     Vec3* add = vec3Add(vscal, cscal);
+
+    vec3Free(cross);
+
     Vec3* dscal = vec3Scale(normAxis, dot * (1 - cosf(angle)));
+    vec3Free(normAxis);
+    vec3Free(vscal);
+    vec3Free(cscal);
 
     Vec3* rlt = vec3Add(add, dscal);
 
-    vec3Free(normAxis);
-    vec3Free(cross);
-    vec3Free(vscal);
-    vec3Free(cscal);
     vec3Free(add);
     vec3Free(dscal);
 
     return rlt;
-
-}
+}   
 
 void vec3Free(Vec3* v) 
 {
-    if (v) free(v);
+    free(v);
 }
