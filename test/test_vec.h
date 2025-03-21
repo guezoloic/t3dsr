@@ -17,6 +17,8 @@ void reflVector3_test();
 void distVector3_test();
 void rotaVector3_test();
 
+void runVector3_test();
+
 // --- Vector4 ---
 
 void addVector4_test();
@@ -30,5 +32,7 @@ void anglVector4_test();
 void projVector4_test();
 void reflVector4_test();
 void distVector4_test();
+
+void runVector4_test();
 
 #endif // TEST_V4
