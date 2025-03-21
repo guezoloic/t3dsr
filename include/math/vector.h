@@ -11,7 +11,7 @@
  *          the first three components of the 4D vector (x, y, z).
  *          Returns NULL if the input vector is NULL or allocation fails.
  */
-Vec3* Vec4ToVec3(Vec4* v);
+Vec3 Vec4ToVec3(Vec4 v);
 
 /**
  * @brief   Converts a 3D vector to a 4D vector.
@@ -21,6 +21,6 @@ Vec3* Vec4ToVec3(Vec4* v);
  *          a default w component (1.0 for position, 0.0 for direction).
  *          Returns NULL if the input vector is NULL or allocation fails.
  */
-Vec4* Vec3ToVec4(Vec3* v);
+Vec4 Vec3ToVec4(Vec3 v);
 
 #endif // VECTOR_H
