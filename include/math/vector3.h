@@ -13,7 +13,7 @@ typedef struct {
  * @return  A pointer to the newly allocated 3D vector if 
  *          successful, or NULL if the allocation fails.
  */
-Vec3* vec3(float x, float y, float z);
+Vec3 vec3(float x, float y, float z);
 
 /**
  * @brief   Adds two 3D vectors in a new 3D vector.
@@ -23,7 +23,7 @@ Vec3* vec3(float x, float y, float z);
  *          representing the sum of v1 and v2.
  *          Returns NULL if the allocation fails.
  */
-Vec3* vec3Add(Vec3* v1, Vec3* v2);
+Vec3 vec3Add(Vec3 v1, Vec3 v2);
 
 /**
  * @brief   Subtracts two 3D vectors in a new 3D 
@@ -34,7 +34,7 @@ Vec3* vec3Add(Vec3* v1, Vec3* v2);
  *          representing the subtraction of v1 and v2. 
  *          Returns NULL if the allocation fails.
  */
-Vec3* vec3Sub(Vec3* v1, Vec3* v2);
+Vec3 vec3Sub(Vec3 v1, Vec3 v2);
 
 /**
  * @brief   Scales a 3D vector by a constant scalar in a 
@@ -46,7 +46,7 @@ Vec3* vec3Sub(Vec3* v1, Vec3* v2);
  *          scalar. Returns NULL if the allocation 
  *          fails.
  */
-Vec3* vec3Scale(Vec3* v, float scalar);
+Vec3 vec3Scale(Vec3 v, float scalar);
 
 /**
  * @brief   Computes the dot product of two 3D vectors
@@ -62,7 +62,7 @@ Vec3* vec3Scale(Vec3* v, float scalar);
  *          Returns NAN if one of the input vectors are 
  *          NULL.
  */
-float vec3Dot(Vec3* a, Vec3* b);
+float vec3Dot(Vec3 a, Vec3 b);
 
 /**
  * @brief   Computes the Length (magnitude) of a 3D 
@@ -72,7 +72,7 @@ float vec3Dot(Vec3* a, Vec3* b);
  *          a scalar value. Returns NAN if input vector
  *          is NULL.
  */
-float vec3Len(Vec3* v);
+float vec3Len(Vec3 v);
 
 /**
  * @brief   Normalizes the 3D vector.
@@ -82,7 +82,7 @@ float vec3Len(Vec3* v);
  *          if the input vector is a zero vector. Returns 
  *          NULL if the input pointer is invalid.
  */
-Vec3* vec3Norm(Vec3* v);
+Vec3 vec3Norm(Vec3 v);
 
 /**
  * @brief   Performs linear interpolation between two 3D 
@@ -99,7 +99,7 @@ Vec3* vec3Norm(Vec3* v);
  *          a and b. Returns NULL if any of the input vectors 
  *          is NULL.
  */
-Vec3* vec3Lerp(Vec3* a, Vec3* b, float t);
+Vec3 vec3Lerp(Vec3 a, Vec3 b, float t);
 
 /**
  * @brief   Computes the cross product of two 3D vectors.
@@ -113,7 +113,7 @@ Vec3* vec3Lerp(Vec3* a, Vec3* b, float t);
  *          the cross product of vectors a and b.
  *          Returns NULL if the allocation fails.
  */
-Vec3* vec3Cross(Vec3* a, Vec3* b);
+Vec3 vec3Cross(Vec3 a, Vec3 b);
 
 /**
  * @brief   Computes the angle between two 3D vectors.
@@ -121,7 +121,7 @@ Vec3* vec3Cross(Vec3* a, Vec3* b);
  * @param   b Pointer to the second vector.
  * @return  The angle between a and b in radians.
  */
-float vec3Angle(Vec3* a, Vec3* b);
+float vec3Angle(Vec3 a, Vec3 b);
 
 /**
  * @brief   Computes the projection of vector a onto vector b.
@@ -131,7 +131,7 @@ float vec3Angle(Vec3* a, Vec3* b);
  *          the projection of a onto b.
  *          Returns NULL if b is a zero vector.
  */
-Vec3* vec3Proj(Vec3* a, Vec3* b);
+Vec3 vec3Proj(Vec3 a, Vec3 b);
 
 /**
  * @brief   Computes the reflection of a vector v against a normal.
@@ -141,7 +141,7 @@ Vec3* vec3Proj(Vec3* a, Vec3* b);
  *          the reflection of v across normal.
  *          Returns NULL if normal is a zero vector.
  */
-Vec3* vec3Refl(Vec3* v, Vec3* normal);
+Vec3 vec3Refl(Vec3 v, Vec3 normal);
 
 /**
  * @brief   Computes the Euclidean distance between two 3D vectors.
@@ -150,7 +150,7 @@ Vec3* vec3Refl(Vec3* v, Vec3* normal);
  * @return  The scalar distance between a and b.
  *          Returns NAN if either vector is NULL.
  */
-float vec3Dist(Vec3* a, Vec3* b);
+float vec3Dist(Vec3 a, Vec3 b);
 
 /**
  * @brief   Rotates a 3D vector around a given axis by a specified angle.
@@ -161,8 +161,8 @@ float vec3Dist(Vec3* a, Vec3* b);
  *          the rotated vector.
  *          Returns NULL if axis is a zero vector.
  */
-Vec3* vec3Rotate(Vec3* v, Vec3* axis, float angle);
+Vec3 vec3Rotate(Vec3 v, Vec3 axis, float angle);
 
-void vec3Free(Vec3* v);
+void vec3Free(Vec3 v);
 
 #endif // VEC3_H

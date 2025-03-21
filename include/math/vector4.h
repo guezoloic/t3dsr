@@ -14,7 +14,7 @@ typedef struct {
  * @return  A pointer to the newly allocated 4D vector if 
  *          successful, or NULL if the allocation fails.
  */
-Vec4* vec4(float x, float y, float z, float w);
+Vec4 vec4(float x, float y, float z, float w);
 
 /**
  * @brief   Adds two 4D vectors in a new 4D vector.
@@ -24,7 +24,7 @@ Vec4* vec4(float x, float y, float z, float w);
  *          representing the sum of v1 and v2.
  *          Returns NULL if the allocation fails.
  */
-Vec4* vec4Add(Vec4* v1, Vec4* v2);
+Vec4 vec4Add(Vec4 v1, Vec4 v2);
 
 /**
  * @brief   Subtracts two 4D vectors in a new 4D 
@@ -35,7 +35,7 @@ Vec4* vec4Add(Vec4* v1, Vec4* v2);
  *          representing the subtraction of v1 and v2. 
  *          Returns NULL if the allocation fails.
  */
-Vec4* vec4Sub(Vec4* v1, Vec4* v2);
+Vec4 vec4Sub(Vec4 v1, Vec4 v2);
 
 /**
  * @brief   Scales a 4D vector by a constant scalar in a 
@@ -47,7 +47,7 @@ Vec4* vec4Sub(Vec4* v1, Vec4* v2);
  *          scalar. Returns NULL if the allocation 
  *          fails.
  */
-Vec4* vec4Scale(Vec4* v, float scalar);
+Vec4 vec4Scale(Vec4 v, float scalar);
 
 /**
  * @brief   Computes the dot product of two 4D vectors
@@ -63,7 +63,7 @@ Vec4* vec4Scale(Vec4* v, float scalar);
  *          Returns NAN if one of the input vectors are 
  *          NULL.
  */
-float vec4Dot(Vec4* a, Vec4* b);
+float vec4Dot(Vec4 a, Vec4 b);
 
 /**
  * @brief   Computes the Length (magnitude) of a 4D 
@@ -73,7 +73,7 @@ float vec4Dot(Vec4* a, Vec4* b);
  *          a scalar value. Returns NAN if input vector
  *          is NULL.
  */
-float vec4Len(Vec4* v);
+float vec4Len(Vec4 v);
 
 /**
  * @brief   Normalizes the 4D vector.
@@ -83,7 +83,7 @@ float vec4Len(Vec4* v);
  *          if the input vector is a zero vector. Returns 
  *          NULL if the input pointer is invalid.
  */
-Vec4* vec4Norm(Vec4* v);
+Vec4 vec4Norm(Vec4 v);
 
 /**
  * @brief   Performs linear interpolation between two 4D 
@@ -100,7 +100,7 @@ Vec4* vec4Norm(Vec4* v);
  *          a and b. Returns NULL if any of the input vectors 
  *          is NULL.
  */
-Vec4* vec4Lerp(Vec4* a, Vec4* b, float t);
+Vec4 vec4Lerp(Vec4 a, Vec4 b, float t);
 
 /**
  * @brief   Computes the angle between two 4D vectors.
@@ -108,7 +108,7 @@ Vec4* vec4Lerp(Vec4* a, Vec4* b, float t);
  * @param   b Pointer to the second vector.
  * @return  The angle between a and b in radians.
  */
-float vec4Angle(Vec4* a, Vec4* b);
+float vec4Angle(Vec4 a, Vec4 b);
 
 /**
  * @brief   Computes the projection of vector a onto vector b.
@@ -118,7 +118,7 @@ float vec4Angle(Vec4* a, Vec4* b);
  *          the projection of a onto b.
  *          Returns NULL if b is a zero vector.
  */
-Vec4* vec4Proj(Vec4* a, Vec4* b);
+Vec4 vec4Proj(Vec4 a, Vec4 b);
 
 /**
  * @brief   Computes the reflection of a vector v against a normal.
@@ -128,7 +128,7 @@ Vec4* vec4Proj(Vec4* a, Vec4* b);
  *          the reflection of v across normal.
  *          Returns NULL if normal is a zero vector.
  */
-Vec4* vec4Refl(Vec4* v, Vec4* normal);
+Vec4 vec4Refl(Vec4 v, Vec4 normal);
 
 /**
  * @brief   Computes the Euclidean distance between two 4D vectors.
@@ -137,9 +137,7 @@ Vec4* vec4Refl(Vec4* v, Vec4* normal);
  * @return  The scalar distance between a and b.
  *          Returns NAN if either vector is NULL.
  */
-float vec4Dist(Vec4* a, Vec4* b);
-
-void vec4Free(Vec4* v);
+float vec4Dist(Vec4 a, Vec4 b);
 
 
 #endif // VECTOR4_H
