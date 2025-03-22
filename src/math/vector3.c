@@ -67,59 +67,40 @@ float vec3Angle(Vec3 a, Vec3 b)
     float lenA = vec3Len(a);    
     float lenB = vec3Len(b);
 
-    if (isnan(lenA) || isnan(lenB) 
-        || lenA < FLT_EPSILON
-        || lenB < FLT_EPSILON) 
+    if (lenA < FLT_EPSILON || lenB < FLT_EPSILON) 
         return NAN;
 
-    float dot = vec3Dot(a, b);
-    float cosTheta = dot / (lenA * lenB);
-
-    cosTheta = fmaxf(-1.f, fminf(cosTheta, 1.f));
-
-    return acosf(cosTheta); 
+    return acosf(fmaxf(-1.f, 
+        fminf(vec3Dot(a, b) / (lenA * lenB), 1.f))); 
 }
 
 Vec3 vec3Proj(Vec3 a, Vec3 b)
 {
-    float dotA = vec3Dot(a, b);
-    float dotB = vec3Dot(b, b);
-
-    float scale = dotA / dotB;
-    return vec3Scale(b, scale);
+    return vec3Scale(b, 
+        vec3Dot(a, b) / vec3Dot(b, b));
 }
 
 Vec3 vec3Refl(Vec3 v, Vec3 normal)
 {
-    Vec3 proj = vec3Proj(v, normal);
-    Vec3 scal = vec3Scale(proj, 2.f);
-    Vec3 rlt = vec3Sub(v, scal);
-    return rlt; 
+    return vec3Sub(v, vec3Scale(vec3Proj(v, normal), 2.f)); 
 }
 
 float vec3Dist(Vec3 a, Vec3 b)
 {
-    Vec3 vsub = vec3Sub(a, b);
-
-    float rlt = vec3Len(vsub);
-    return rlt;
+    return vec3Len(vec3Sub(a, b));;
 }
 
 Vec3 vec3Rotate(Vec3 v, Vec3 axis, float angle) 
 {
     Vec3 normAxis = vec3Norm(axis);
 
-    float dot = vec3Dot(normAxis, v);
-    Vec3 cross = vec3Cross(normAxis, v);
-    
-    Vec3 vscal = vec3Scale(v, cosf(angle));
-    Vec3 cscal = vec3Scale(cross, sinf(angle));
-
-    Vec3 add = vec3Add(vscal, cscal);
-
-    Vec3 dscal = vec3Scale(normAxis, dot * (1 - cosf(angle)));
-
-    Vec3 rlt = vec3Add(add, dscal);
+    Vec3 rlt = vec3Add(
+        vec3Add(
+            vec3Scale(v, cosf(angle)), 
+            vec3Scale(vec3Cross(normAxis, v), sinf(angle))
+        ), 
+        vec3Scale(normAxis, vec3Dot(normAxis, v) * (1 - cosf(angle)))
+    );
 
     return rlt;
 }   
