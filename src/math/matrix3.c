@@ -1,6 +1,5 @@
 #include "math/matrix3.h"
 #include <string.h>
-#include <math.h>
 
 Mat3 mat3(float arr[9]) {
     Mat3 mat;
@@ -87,4 +86,25 @@ float mat3Det(Mat3 m) {
     return m.m[0] * (m.m[4] * m.m[8] - m.m[5] * m.m[7]) -
            m.m[1] * (m.m[3] * m.m[8] - m.m[5] * m.m[6]) +
            m.m[2] * (m.m[3] * m.m[7] - m.m[4] * m.m[6]);
+}
+
+Mat3 mat3Inv(Mat3 m) {
+    Mat3 inv;
+    float det = mat3Det(m);
+    if (det == 0) return mat3Ity();
+
+    float invDet = 1.0f / det;
+
+    // ???
+    inv.m[0] =  (m.m[4] * m.m[8] - m.m[5] * m.m[7]) * invDet;
+    inv.m[1] = -(m.m[1] * m.m[8] - m.m[2] * m.m[7]) * invDet;
+    inv.m[2] =  (m.m[1] * m.m[5] - m.m[2] * m.m[4]) * invDet;
+    inv.m[3] = -(m.m[3] * m.m[8] - m.m[5] * m.m[6]) * invDet;
+    inv.m[4] =  (m.m[0] * m.m[8] - m.m[2] * m.m[6]) * invDet;
+    inv.m[5] = -(m.m[0] * m.m[5] - m.m[2] * m.m[3]) * invDet;
+    inv.m[6] =  (m.m[3] * m.m[7] - m.m[4] * m.m[6]) * invDet;
+    inv.m[7] = -(m.m[0] * m.m[7] - m.m[1] * m.m[6]) * invDet;
+    inv.m[8] =  (m.m[0] * m.m[4] - m.m[1] * m.m[3]) * invDet;
+
+    return inv;
 }

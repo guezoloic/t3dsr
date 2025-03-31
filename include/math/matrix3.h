@@ -15,5 +15,6 @@ Mat3 mat3Scl(Mat3 m, float scalar);
 Mat3 mat3Mul(Mat3 m1, Mat3 m2);
 Mat3 mat3Tpo(Mat3 m);
 float mat3Det(Mat3 m);
+Mat3 mat3Inv(Mat3 m);
 
 #endif // MATRIX_H
