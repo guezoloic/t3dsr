@@ -1,7 +1,8 @@
-#ifndef VEC3_H
-#define VEC3_H
+#ifndef VEC3__H
+#define VEC3__H
 
-typedef struct {
+typedef struct 
+{
     float x, y, z;
 } Vec3;
 
@@ -20,7 +21,7 @@ Vec3 vec3(float x, float y, float z);
  * @param   v2 Second vector.
  * @return  A 3D vector representing the sum of v1 and v2.
  */
-Vec3 vec3Add(Vec3 v1, Vec3 v2);
+Vec3 vec3_add(Vec3 v1, Vec3 v2);
 
 /**
  * @brief   Subtracts two 3D vectors and returns a new 3D vector.
@@ -28,7 +29,7 @@ Vec3 vec3Add(Vec3 v1, Vec3 v2);
  * @param   v2 Second vector.
  * @return  A 3D vector representing the result of v1 minus v2.
  */
-Vec3 vec3Sub(Vec3 v1, Vec3 v2);
+Vec3 vec3_sub(Vec3 v1, Vec3 v2);
 
 /**
  * @brief   Scales a 3D vector by a constant scalar and returns a new 3D vector.
@@ -36,7 +37,7 @@ Vec3 vec3Sub(Vec3 v1, Vec3 v2);
  * @param   scalar Scalar value.
  * @return  A 3D vector representing the multiplication of v by the scalar.
  */
-Vec3 vec3Scale(Vec3 v, float scalar);
+Vec3 vec3_scale(Vec3 v, float scalar);
 
 /**
  * @brief   Computes the dot product of two 3D vectors.
@@ -47,14 +48,14 @@ Vec3 vec3Scale(Vec3 v, float scalar);
  *          - scalar = 0: Vectors are orthogonal (the angle between them is 90 degrees).
  *          - scalar < 0: Vectors have opposite orientations (the angle between them is obtuse).
  */
-float vec3Dot(Vec3 a, Vec3 b);
+float vec3_dot(Vec3 a, Vec3 b);
 
 /**
  * @brief   Computes the length (magnitude) of a 3D vector.
  * @param   v 3D vector.
  * @return  A scalar value representing the length (magnitude) of the vector v.
  */
-float vec3Len(Vec3 v);
+float vec3_len(Vec3 v);
 
 /**
  * @brief   Normalizes a 3D vector (scales it to unit length).
@@ -62,7 +63,7 @@ float vec3Len(Vec3 v);
  * @return  A 3D vector representing the normalized version of v.
  *          Returns a zero vector (0, 0, 0) if the input vector is a zero vector.
  */
-Vec3 vec3Norm(Vec3 v);
+Vec3 vec3_norm(Vec3 v);
 
 /**
  * @brief   Performs linear interpolation between two 3D vectors.
@@ -74,7 +75,7 @@ Vec3 vec3Norm(Vec3 v);
  *             - t between 0 and 1 returns a point between a and b.
  * @return  A 3D vector representing the interpolated result between a and b.
  */
-Vec3 vec3Lerp(Vec3 a, Vec3 b, float t);
+Vec3 vec3_lerp(Vec3 a, Vec3 b, float t);
 
 /**
  * @brief   Computes the cross product of two 3D vectors.
@@ -84,7 +85,7 @@ Vec3 vec3Lerp(Vec3 a, Vec3 b, float t);
  * @param   b Second vector.
  * @return  A 3D vector representing the cross product of vectors a and b.
  */
-Vec3 vec3Cross(Vec3 a, Vec3 b);
+Vec3 vec3_cross(Vec3 a, Vec3 b);
 
 /**
  * @brief   Computes the angle between two 3D vectors.
@@ -92,7 +93,7 @@ Vec3 vec3Cross(Vec3 a, Vec3 b);
  * @param   b Second vector.
  * @return  The angle between vectors a and b in radians.
  */
-float vec3Angle(Vec3 a, Vec3 b);
+float vec3_angle(Vec3 a, Vec3 b);
 
 /**
  * @brief   Computes the projection of vector a onto vector b.
@@ -100,7 +101,7 @@ float vec3Angle(Vec3 a, Vec3 b);
  * @param   b The vector onto which a is projected.
  * @return  A 3D vector representing the projection of a onto b.
  */
-Vec3 vec3Proj(Vec3 a, Vec3 b);
+Vec3 vec3_proj(Vec3 a, Vec3 b);
 
 /**
  * @brief   Computes the reflection of a vector v against a normal.
@@ -108,7 +109,7 @@ Vec3 vec3Proj(Vec3 a, Vec3 b);
  * @param   normal The normal vector of the surface.
  * @return  A 3D vector representing the reflection of v across normal.
  */
-Vec3 vec3Refl(Vec3 v, Vec3 normal);
+Vec3 vec3_refl(Vec3 v, Vec3 normal);
 
 /**
  * @brief   Computes the Euclidean distance between two 3D vectors.
@@ -116,7 +117,7 @@ Vec3 vec3Refl(Vec3 v, Vec3 normal);
  * @param   b The second vector.
  * @return  The scalar distance between a and b.
  */
-float vec3Dist(Vec3 a, Vec3 b);
+float vec3_rist(Vec3 a, Vec3 b);
 
 /**
  * @brief   Rotates a 3D vector around a given axis by a specified angle.
@@ -125,6 +126,6 @@ float vec3Dist(Vec3 a, Vec3 b);
  * @param   angle Rotation angle in radians.
  * @return  A 3D vector representing the rotated vector.
  */
-Vec3 vec3Rotate(Vec3 v, Vec3 axis, float angle);
+Vec3 vec3_rotate(Vec3 v, Vec3 axis, float angle);
 
-#endif // VEC3_H
+#endif // VEC3__H
