@@ -1,7 +1,7 @@
-#include "matrix3.h"
+#include "mat3.h"
 #include <string.h>
 
-Mat3 mat3(float arr[9]) 
+Mat3 mat3(const float arr[9]) 
 {
     Mat3 mat;
     memcpy(mat.m, arr, 9*sizeof(float));
@@ -90,30 +90,30 @@ Mat3 mat3_tpo(const Mat3* m)
     return mat;
 }
 
-float mat3_det(const Mat3* m) 
+float mat3_Det(const Mat3* m) 
 {
     return m->m[0] * (m->m[4] * m->m[8] - m->m[5] * m->m[7]) -
            m->m[1] * (m->m[3] * m->m[8] - m->m[5] * m->m[6]) +
            m->m[2] * (m->m[3] * m->m[7] - m->m[4] * m->m[6]);
 }
 
-// Mat3 Mat3Inv(Mat3 m) {
-//     Mat3 inv;
-//     float det = Mat3Det(m);
-//     if (det == 0) return Mat3Ity();
+Mat3 mat3_inv(const Mat3* m) {
+    Mat3 inv;
+    float det = mat3_det(m);
+    if (det == 0) return mat3_ity();
 
-//     float invDet = 1.0f / det;
+    float invDet = 1.0f / det;
 
-//     // ???
-//     inv.m[0] =  (m->m[4] * m->m[8] - m->m[5] * m->m[7]) * invDet;
-//     inv.m[1] = -(m->m[1] * m->m[8] - m->m[2] * m->m[7]) * invDet;
-//     inv.m[2] =  (m->m[1] * m->m[5] - m->m[2] * m->m[4]) * invDet;
-//     inv.m[3] = -(m->m[3] * m->m[8] - m->m[5] * m->m[6]) * invDet;
-//     inv.m[4] =  (m->m[0] * m->m[8] - m->m[2] * m->m[6]) * invDet;
-//     inv.m[5] = -(m->m[0] * m->m[5] - m->m[2] * m->m[3]) * invDet;
-//     inv.m[6] =  (m->m[3] * m->m[7] - m->m[4] * m->m[6]) * invDet;
-//     inv.m[7] = -(m->m[0] * m->m[7] - m->m[1] * m->m[6]) * invDet;
-//     inv.m[8] =  (m->m[0] * m->m[4] - m->m[1] * m->m[3]) * invDet;
+    // ???
+    inv.m[0] =  (m->m[4] * m->m[8] - m->m[5] * m->m[7]) * invDet;
+    inv.m[1] = -(m->m[1] * m->m[8] - m->m[2] * m->m[7]) * invDet;
+    inv.m[2] =  (m->m[1] * m->m[5] - m->m[2] * m->m[4]) * invDet;
+    inv.m[3] = -(m->m[3] * m->m[8] - m->m[5] * m->m[6]) * invDet;
+    inv.m[4] =  (m->m[0] * m->m[8] - m->m[2] * m->m[6]) * invDet;
+    inv.m[5] = -(m->m[0] * m->m[5] - m->m[2] * m->m[3]) * invDet;
+    inv.m[6] =  (m->m[3] * m->m[7] - m->m[4] * m->m[6]) * invDet;
+    inv.m[7] = -(m->m[0] * m->m[7] - m->m[1] * m->m[6]) * invDet;
+    inv.m[8] =  (m->m[0] * m->m[4] - m->m[1] * m->m[3]) * invDet;
 
-//     return inv;
-// }
+    return inv;
+}

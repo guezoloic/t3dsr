@@ -6,7 +6,7 @@ typedef struct
     float m[9];
 } Mat3;
 
-Mat3 mat3(float arr[9]);
+Mat3 mat3(const float arr[9]);
 Mat3 mat3_zro();
 Mat3 mat3_ity();
 

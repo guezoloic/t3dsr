@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <float.h>
 
-#include "vector4.h"
+#include "vec4.h"
 
 inline Vec4 vec4(float x, float y, float z, float w) 
 {

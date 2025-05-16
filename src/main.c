@@ -1,4 +1,4 @@
-#include "math/vector3.h"
+#include "math/vec3.h"
 #include <stdio.h>
 
 #define printVector3(v) { printf("(%f, %f, %f)", v.x, v.y, v.z); }

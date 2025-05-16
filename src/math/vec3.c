@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <float.h>
 
-#include "vector3.h"
+#include "vec3.h"
 
 inline Vec3 vec3(float x, float y, float z) 
 {
@@ -22,11 +22,6 @@ Vec3 vec3_sub(Vec3 v1, Vec3 v2)
 Vec3 vec3_scale(Vec3 v, float scalar)
 {
     return vec3(v.x * scalar, v.y * scalar, v.z * scalar);
-}
-
-Vec3 vec3_mul(Vec3 v1, Vec3 v2)
-{
-    return vec3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
 }
 
 float vec3_dot(Vec3 a, Vec3 b) 
