@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <float.h>
 
-#include "math/vector3.h"
+#include "vector3.h"
 
 Vec3 vec3(float x, float y, float z) 
 {
