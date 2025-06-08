@@ -1,30 +1,30 @@
 #include "mat3.h"
 #include <string.h>
 
-Mat3 mat3(const float arr[9]) 
+Mat3_t mat3(const float arr[9]) 
 {
-    Mat3 mat;
+    Mat3_t mat;
     memcpy(mat.m, arr, 9*sizeof(float));
     return mat;
 }
 
-Mat3 mat3_zro() 
+Mat3_t mat3_zro() 
 {
-    return (Mat3){0};
+    return (Mat3_t){0};
 }
 
-Mat3 mat3_ity() 
+Mat3_t mat3_ity() 
 {
-    return (Mat3) {{
+    return (Mat3_t) {{
         1, 0, 0,
         0, 1, 0,
         0, 0, 1
     }};
 }
 
-Mat3 mat3_add(const Mat3* m1, const Mat3* m2) 
+Mat3_t mat3_add(const Mat3_t* m1, const Mat3_t* m2) 
 {
-    Mat3 mat;
+    Mat3_t mat;
     
     for(int i = 0; i<9; i++) {
         mat.m[i] = m1->m[i] + m2->m[i];
@@ -33,9 +33,9 @@ Mat3 mat3_add(const Mat3* m1, const Mat3* m2)
     return mat;
 }
 
-Mat3 mat3_sub(const Mat3* m1, const Mat3* m2) 
+Mat3_t mat3_sub(const Mat3_t* m1, const Mat3_t* m2) 
 {
-    Mat3 mat;
+    Mat3_t mat;
 
     for(int i = 0; i<9; i++) {
         mat.m[i] = m1->m[i] - m2->m[i];
@@ -44,9 +44,9 @@ Mat3 mat3_sub(const Mat3* m1, const Mat3* m2)
     return mat;
 }
 
-Mat3 mat3_scl(const Mat3* m, float scalar) 
+Mat3_t mat3_scl(const Mat3_t* m, float scalar) 
 {
-    Mat3 mat;
+    Mat3_t mat;
 
     for(int i = 0; i<9; i++) {
         mat.m[i] = m->m[i] * scalar;
@@ -55,9 +55,9 @@ Mat3 mat3_scl(const Mat3* m, float scalar)
     return mat;
 }
 
-Mat3 mat3_mul(const Mat3* m1, const Mat3* m2) 
+Mat3_t mat3_mul(const Mat3_t* m1, const Mat3_t* m2) 
 {
-    Mat3 mat; 
+    Mat3_t mat; 
 
     for(int i = 0; i<3; i++) {
         int i3 = i * 3;
@@ -75,9 +75,9 @@ Mat3 mat3_mul(const Mat3* m1, const Mat3* m2)
     return mat;
 }
 
-Mat3 mat3_tpo(const Mat3* m) 
+Mat3_t mat3_tpo(const Mat3_t* m) 
 {
-    Mat3 mat;
+    Mat3_t mat;
 
     for(int i = 0; i<3; i++) {
         int i3 = i * 3;
@@ -90,21 +90,20 @@ Mat3 mat3_tpo(const Mat3* m)
     return mat;
 }
 
-float mat3_Det(const Mat3* m) 
+float mat3_det(const Mat3_t* m) 
 {
     return m->m[0] * (m->m[4] * m->m[8] - m->m[5] * m->m[7]) -
            m->m[1] * (m->m[3] * m->m[8] - m->m[5] * m->m[6]) +
            m->m[2] * (m->m[3] * m->m[7] - m->m[4] * m->m[6]);
 }
 
-Mat3 mat3_inv(const Mat3* m) {
-    Mat3 inv;
+Mat3_t mat3_inv(const Mat3_t* m) {
+    Mat3_t inv;
     float det = mat3_det(m);
     if (det == 0) return mat3_ity();
 
     float invDet = 1.0f / det;
 
-    // ???
     inv.m[0] =  (m->m[4] * m->m[8] - m->m[5] * m->m[7]) * invDet;
     inv.m[1] = -(m->m[1] * m->m[8] - m->m[2] * m->m[7]) * invDet;
     inv.m[2] =  (m->m[1] * m->m[5] - m->m[2] * m->m[4]) * invDet;
