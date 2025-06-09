@@ -8,9 +8,9 @@ typedef struct
 
 Mat3_t mat3(const float arr[9]);
 
-Mat3_t mat3_zro();
+Mat3_t mat3_zro(void);
 
-Mat3_t mat3_ity();
+Mat3_t mat3_ity(void);
 
 Mat3_t mat3_add(const Mat3_t* m1, const Mat3_t* m2);
 

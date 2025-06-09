@@ -8,12 +8,12 @@ Mat3_t mat3(const float arr[9])
     return mat;
 }
 
-Mat3_t mat3_zro() 
+Mat3_t mat3_zro(void) 
 {
     return (Mat3_t){0};
 }
 
-Mat3_t mat3_ity() 
+Mat3_t mat3_ity(void) 
 {
     return (Mat3_t) {{
         1, 0, 0,
