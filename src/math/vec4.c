@@ -26,14 +26,6 @@ Vec4f_t vec4f_from_array(float *__restrict val)
     return vec;
 }
 
-// clone entire vec4f_t
-Vec4f_t vec4f_clone(Vec4f_t *__restrict v)
-{
-    Vec4f_t vec;
-    memcpy(&vec, v, sizeof(Vec4f_t));
-    return vec;
-}
-
 Vec4f_t vec4f_scalar(float f) 
 {
     Vec4f_t vec4;
@@ -57,7 +49,7 @@ Vec4f_t vec4f_scalar(float f)
     return vec4;
 }
 
-Vec4f_t Vec4f_zero(void)
+Vec4f_t vec4f_zero(void)
 {
     return vec4f_scalar(0.f);
 }
@@ -68,7 +60,7 @@ Vec4f_t vec4f_add_r(Vec4f_t *__restrict out, Vec4f_t a)
     __m128 va = _mm_load_ps(a.data);
     __m128 vb = _mm_load_ps(out->data);
     __m128 vres = _mm_add_ps(va, vb);
-    _mm_store_ps(out->data, vres);
+    _mm_storeu_ps(out->data, vres);
 
 #elif defined (SIMD_ARCH)
     float32x4_t va = vld1q_f32(a.data);
@@ -93,10 +85,10 @@ Vec4f_t vec4f_add(Vec4f_t a, Vec4f_t b)
 Vec4f_t vec4f_sub_r(Vec4f_t *__restrict out, Vec4f_t a)
 {
 #if defined (SIMD_X86)   
-    __m128 va = _mm_load_ps(a.data);
-    __m128 vb = _mm_load_ps(out->data);
+    __m128 va = _mm_load_ps(out->data);
+    __m128 vb = _mm_load_ps(a.data);
     __m128 vres = _mm_sub_ps(va, vb);
-    _mm_store_ps(out->data, vres); 
+    _mm_storeu_ps(out->data, vres);
 
 #elif defined (SIMD_ARCH)
     float32x4_t va = vld1q_f32(a.data);
@@ -125,7 +117,7 @@ Vec4f_t vec4f_scale_r(Vec4f_t *__restrict out, float scalar)
     __m128 va = _mm_load_ps(out->data);
     __m128 vb = _mm_set1_ps(scalar);
     __m128 vres = _mm_mul_ps(va, vb);
-    _mm_store_ps(out->data, vres);
+    _mm_storeu_ps(out->data, vres);
 
 #elif defined (SIMD_ARCH)
     float32x4_t va = vld1q_f32(out->data);
@@ -146,6 +138,21 @@ Vec4f_t vec4f_scale(Vec4f_t a, float scalar)
     vec4f_scale_r(&vec, scalar);
     return vec;
 }
+
+//float vec4f_dot(Vec4f_t a, Vec4f_t b)
+//{
+//#if defined (SIMD_X86)
+//    __m128 va = _mm_load_ps(a.data);
+//    __m128 vb = _mm_load_ps(b.data);
+//    __m128 vres = _mm_mul_ps(va, vb);
+//    return
+//    
+//#elif defined (SIMD_ARCH)
+//    
+//#else
+//    
+//#endif
+//}
 
 // float vec4_dot(Vec4_t a, Vec4_t b)
 // {
