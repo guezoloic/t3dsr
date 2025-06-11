@@ -20,58 +20,22 @@ typedef union
     float data[4];
 } Vec4f_t;  
 
-static inline Vec4f_t vec4f_from_array(float *__restrict val)
-{
-    Vec4f_t vec4;
-    memcpy(vec4.data, val, 4*sizeof(float));
-    return vec4;
-}
-
-static inline Vec4f_t vec4(float x, float y, float z, float w) 
-{
-    return (Vec4f_t){x, y, z, w};
-}
-
+Vec4f_t vec4f_from_array(float *__restrict val);
+Vec4f_t vec4(float x, float y, float z, float w);
 // (f, f, f, f)
-static inline Vec4f_t vec4f_scalar(float f) {
-    Vec4f_t vec4;
-
-// store f x 4 in register
-// add all register into data
-#if defined(SIMD_X86)
-    __m128 scalar = _mm_set1_ps(f);
-    _mm_storeu_ps(vec4.data, scalar);
-
-#elif defined(SIMD_ARCH)
-    float32x4_t scalar = vdupq_n_f32(f);
-    vst1q_f32(vec4.data, scalar);
-
-// add one by one each value to their specific address
-#else
-    for (int i = 0; i < 4; i++) {
-        vec4.data[i] = f;
-    }
-#endif
-    return vec4;
-}
-
+Vec4f_t vec4f_scalar(float f);
 // (0, 0, 0, 0)
-static inline Vec4f_t Vec4f_zero(void)
-{
-    return vec4f_scalar(0.f);
-}
+Vec4f_t vec4f_zero(void);
+Vec4f_t vec4f_clone(Vec4f_t *__restrict v);
 
 Vec4f_t vec4f_add_r(Vec4f_t *__restrict out, Vec4f_t a);
 Vec4f_t vec4f_add(Vec4f_t a, Vec4f_t b);
 
+Vec4f_t vec4f_sub_r(Vec4f_t *__restrict out, Vec4f_t a);
+Vec4f_t vec4f_sub(Vec4f_t a, Vec4f_t b);
 
-// Vec4_t vec4(float x, float y, float z, float w);
-
-// Vec4_t vec4_add(Vec4_t v1, Vec4_t v2);
-
-// Vec4_t vec4_sub(Vec4_t v1, Vec4_t v2);
-
-// Vec4_t vec4_scale(Vec4_t v, float scalar);
+Vec4f_t vec4f_scale_r(Vec4f_t *__restrict out, float scale);
+Vec4f_t vec4f_scale(Vec4f_t a, float scale);
 
 // float vec4_dot(Vec4_t a, Vec4_t b);
 

@@ -88,20 +88,20 @@ Mat4_t mat4_scl(const Mat4_t* m, float scalar)
 
 Mat4_t mat4_mul(const Mat4_t* m1, const Mat4_t* m2) 
 {
-    Mat4_t mat; 
-
+    Mat4_t mat;
+    
     for(int i = 0; i<4; i++) {
         int i3 = i * 3;
         for (int j = 0; j < 4; j++) {
             float sum = 0;
             
             for (int k = 0; k < 3; k++) {
-                sum += m1->m[i3 + k] * m2->m[k*3 + j];    
+                sum += m1->m[i3 + k] * m2->m[k*3 + j];
             }
-
+            
             mat.m[i3 + j] = sum;
         }
     }
-
+    
     return mat;
 }

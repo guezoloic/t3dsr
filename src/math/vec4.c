@@ -14,6 +14,54 @@
 
 #include "vec4.h"
 
+Vec4f_t vec4(float x, float y, float z, float w) 
+{
+    return (Vec4f_t){.x = x, .y = y, .z = z, .w = w};
+}
+
+Vec4f_t vec4f_from_array(float *__restrict val)
+{
+    Vec4f_t vec;
+    memcpy(vec.data, val, 4*sizeof(float));
+    return vec;
+}
+
+// clone entire vec4f_t
+Vec4f_t vec4f_clone(Vec4f_t *__restrict v)
+{
+    Vec4f_t vec;
+    memcpy(&vec, v, sizeof(Vec4f_t));
+    return vec;
+}
+
+Vec4f_t vec4f_scalar(float f) 
+{
+    Vec4f_t vec4;
+
+// store f x 4 in register
+// add all register into data
+#if defined(SIMD_X86)
+    __m128 scalar = _mm_set1_ps(f);
+    _mm_storeu_ps(vec4.data, scalar);
+
+#elif defined(SIMD_ARCH)
+    float32x4_t scalar = vdupq_n_f32(f);
+    vst1q_f32(vec4.data, scalar);
+
+// add one by one each value to their specific address
+#else
+    for (int i = 0; i < 4; i++) {
+        vec4.data[i] = f;
+    }
+#endif
+    return vec4;
+}
+
+Vec4f_t Vec4f_zero(void)
+{
+    return vec4f_scalar(0.f);
+}
+
 Vec4f_t vec4f_add_r(Vec4f_t *__restrict out, Vec4f_t a)
 {
 #if defined (SIMD_X86)
@@ -35,20 +83,69 @@ Vec4f_t vec4f_add_r(Vec4f_t *__restrict out, Vec4f_t a)
     return *out;
 }
 
-Vec4f_t vec4_add(Vec4f_t v1, Vec4f_t v2)
+Vec4f_t vec4f_add(Vec4f_t a, Vec4f_t b)
 {
-    return vec4(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w);
+    Vec4f_t vec = vec4f_clone(&a);
+    vec4f_add_r(&vec, b);
+    return vec;
 }
 
-// Vec4_t vec4_sub(Vec4_t v1, Vec4_t v2)
-// {
-//     return vec4(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w);
-// }
+Vec4f_t vec4f_sub_r(Vec4f_t *__restrict out, Vec4f_t a)
+{
+#if defined (SIMD_X86)   
+    __m128 va = _mm_load_ps(a.data);
+    __m128 vb = _mm_load_ps(out->data);
+    __m128 vres = _mm_sub_ps(va, vb);
+    _mm_store_ps(out->data, vres); 
 
-// Vec4_t vec4_scale(Vec4_t v, float scalar)
-// {
-//     return vec4(v.x * scalar, v.y * scalar, v.z * scalar, v.w * scalar);
-// }
+#elif defined (SIMD_ARCH)
+    float32x4_t va = vld1q_f32(a.data);
+    float32x4_t vb = vld1q_f32(out->data);
+    float32x4_t vres = vsubq_f32(va, vb);
+    vst1q_f32(out->data, vres);
+
+#else
+    for(int i = 0; i<4; i++) {
+        out->data[i] -= a.data[i];
+    }
+#endif
+    return *out;
+}
+
+Vec4f_t vec4f_sub(Vec4f_t a, Vec4f_t b)
+{
+    Vec4f_t vec = vec4f_clone(&a);
+    vec4f_sub_r(&vec, b);
+    return vec;
+}
+
+Vec4f_t vec4f_scale_r(Vec4f_t *__restrict out, float scalar)
+{
+#if defined (SIMD_X86)
+    __m128 va = _mm_load_ps(out->data);
+    __m128 vb = _mm_set1_ps(scalar);
+    __m128 vres = _mm_mul_ps(va, vb);
+    _mm_store_ps(out->data, vres);
+
+#elif defined (SIMD_ARCH)
+    float32x4_t va = vld1q_f32(out->data);
+    float32x4_t vb = vdupq_n_f32(scalar);
+    float32x4_t vres = vmulq_f32(va, vb);
+    vst1q_f32(out->data, vres);
+#else
+    for(int i = 0; i<4; i++) {
+        out->data[i] *= scalar;
+    }
+#endif
+    return *out;
+}
+
+Vec4f_t vec4f_scale(Vec4f_t a, float scalar)
+{
+    Vec4f_t vec = vec4f_clone(&a);
+    vec4f_scale_r(&vec, scalar);
+    return vec;
+}
 
 // float vec4_dot(Vec4_t a, Vec4_t b)
 // {
