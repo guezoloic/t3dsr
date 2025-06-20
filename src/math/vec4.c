@@ -1,18 +1,5 @@
-#include <float.h>
-#include <math.h>
-#include <string.h>
-#include <stdlib.h>
-
-#if defined(__x86_64__) || defined(__i386__)
-#define SIMD_X86
-#include <xmmintrin.h>
-#elif defined(__aarch64__) || defined(__arm64__)
-#define SIMD_ARCH
-#include <arm_neon.h>
-#else
-#endif
-
 #include "vec4.h"
+#include "common_math.h"
 
 Vec4f_t vec4(float x, float y, float z, float w) 
 {
@@ -77,9 +64,8 @@ Vec4f_t vec4f_add_r(Vec4f_t *__restrict out, Vec4f_t a)
 
 Vec4f_t vec4f_add(Vec4f_t a, Vec4f_t b)
 {
-    Vec4f_t vec = vec4f_clone(&a);
-    vec4f_add_r(&vec, b);
-    return vec;
+    vec4f_add_r(&a, b);
+    return a;
 }
 
 Vec4f_t vec4f_sub_r(Vec4f_t *__restrict out, Vec4f_t a)
@@ -106,9 +92,8 @@ Vec4f_t vec4f_sub_r(Vec4f_t *__restrict out, Vec4f_t a)
 
 Vec4f_t vec4f_sub(Vec4f_t a, Vec4f_t b)
 {
-    Vec4f_t vec = vec4f_clone(&a);
-    vec4f_sub_r(&vec, b);
-    return vec;
+    vec4f_sub_r(&a, b);
+    return a;
 }
 
 Vec4f_t vec4f_scale_r(Vec4f_t *__restrict out, float scalar)
@@ -134,9 +119,8 @@ Vec4f_t vec4f_scale_r(Vec4f_t *__restrict out, float scalar)
 
 Vec4f_t vec4f_scale(Vec4f_t a, float scalar)
 {
-    Vec4f_t vec = vec4f_clone(&a);
-    vec4f_scale_r(&vec, scalar);
-    return vec;
+    vec4f_scale_r(&a, scalar);
+    return a;
 }
 
 //float vec4f_dot(Vec4f_t a, Vec4f_t b)

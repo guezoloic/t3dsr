@@ -1,20 +1,7 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 
-#include <stdlib.h>
-#include <stdlib.h>
-#include <string.h>
-
-#if defined(__x86_64__) || defined(__i386__)
-#define SIMD_X86
-#include <xmmintrin.h>
-#elif defined(__aarch64__) || defined(__arm64__)
-#define SIMD_ARCH
-#include <arm_neon.h>
-#else
-#endif
-
-// must be aligned by 16 Bytes (less instruction executed  for SSE)
+// must be aligned by 16 Bytes (less instruction executed for SSE)
 typedef union
 {
     struct { float x, y, z, w; };
