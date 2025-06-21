@@ -22,10 +22,8 @@
 
 #ifdef _MSC_VER
     #define ALIGN16 __declspec(align(16))
-    #define RESTRICT __restrict__
 #else
     #define ALIGN16 __attribute__((aligned(16)))
-    #define RESTRICT __restrict
 #endif
 
 #endif // MCONFIG_H
