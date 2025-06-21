@@ -8,12 +8,10 @@
 #ifndef vec3_h
 #define vec3_h
 
-#include "common_math.h"
-
 typedef union
 {
     struct {float x, y, z; };
-    float data[3];
+    float data[4];
 } __attribute__((aligned(16))) Vec3f_t;
 
 Vec3f_t vec3f_from_array(const float *__restrict val);
