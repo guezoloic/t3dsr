@@ -8,7 +8,7 @@ Vec4f_t vec4f(float x, float y, float z, float w)
     return (Vec4f_t){.x = x, .y = y, .z = z, .w = w};
 }
 
-Vec4f_t vec4f_from_array(const float *__restrict val)
+Vec4f_t vec4f_from_array(const float *restrict val)
 {
     Vec4f_t vec;
 #if defined (SIMD_X86)
@@ -53,7 +53,7 @@ Vec4f_t vec4f_zero(void)
     return vec4f_scalar(0.f);
 }
 
-Vec4f_t vec4f_add_r(Vec4f_t *__restrict out, Vec4f_t a)
+Vec4f_t vec4f_add_r(Vec4f_t *restrict out, Vec4f_t a)
 {
 #if defined (SIMD_X86)
     __m128 va = _mm_load_ps(a.data);
@@ -80,7 +80,7 @@ Vec4f_t vec4f_add(Vec4f_t a, Vec4f_t b)
     return a;
 }
 
-Vec4f_t vec4f_sub_r(Vec4f_t *__restrict out, Vec4f_t a)
+Vec4f_t vec4f_sub_r(Vec4f_t *restrict out, Vec4f_t a)
 {
 #if defined (SIMD_X86)   
     __m128 va = _mm_load_ps(out->data);
@@ -108,7 +108,7 @@ Vec4f_t vec4f_sub(Vec4f_t a, Vec4f_t b)
     return a;
 }
 
-Vec4f_t vec4f_scale_r(Vec4f_t *__restrict out, float scalar)
+Vec4f_t vec4f_scale_r(Vec4f_t *restrict out, float scalar)
 {
 #if defined (SIMD_X86)
     __m128 va = _mm_load_ps(out->data);

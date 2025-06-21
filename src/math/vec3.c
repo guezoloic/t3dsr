@@ -15,11 +15,11 @@ Vec3f_t vec3f(float x, float y, float z)
     return (Vec3f_t){.x = x, .y = y, .z = z};
 }
 
-Vec3f_t vec3f_from_array(const float *__restrict val)
+Vec3f_t vec3f_from_array(const float *restrict val)
 {
     Vec3f_t vec;
 #if defined (SIMD_X86)
-    __m128 arr = _mm_loadu_ps(val);
+    __m128 arr = _mm_load_ps(val);
     _mm_store_ps(vec.data, arr);
 #elif defined (SIMD_ARCH)
     float32x4_t arr = vld1q_f32(val);
@@ -54,7 +54,7 @@ Vec3f_t vec3f_zero(void)
     return vec3f_scalar(0.f);
 }
 
-Vec3f_t vec3f_add_r(Vec3f_t *__restrict out, Vec3f_t a)
+Vec3f_t vec3f_add_r(Vec3f_t *restrict out, Vec3f_t a)
 {
 #if defined (SIMD_X86)
     __m128 va = _mm_load_ps(a.data);
@@ -79,7 +79,7 @@ Vec3f_t vec3f_add(Vec3f_t a, Vec3f_t b)
     return vec3f_add_r(&a, b);
 }
 
-Vec3f_t vec3f_sub_r(Vec3f_t *__restrict out, Vec3f_t a)
+Vec3f_t vec3f_sub_r(Vec3f_t *restrict out, Vec3f_t a)
 {
 #if defined (SIMD_X86)
     __m128 va = _mm_load_ps(out->data);
@@ -104,7 +104,7 @@ Vec3f_t vec3f_sub(Vec3f_t a, Vec3f_t b)
     return vec3f_sub_r(&a, b);
 }
 
-Vec3f_t vec3f_scale_r(Vec3f_t *__restrict out, float scalar)
+Vec3f_t vec3f_scale_r(Vec3f_t *restrict out, float scalar)
 {
 #if defined (SIMD_X86)
     __m128 va = _mm_load_ps(out->data);
@@ -130,11 +130,11 @@ Vec3f_t vec3f_scale(Vec3f_t a, float scalar)
 }
 
 
-//Vec3f_t vec3f_add_r(Vec3f_t *__restrict out, Vec3f_t a);
+//Vec3f_t vec3f_add_r(Vec3f_t *restrict out, Vec3f_t a);
 //Vec3f_t vec3f_add(Vec3f_t a, Vec3f_t b);
 //
-//Vec3f_t vec3f_sub_r(Vec3f_t *__restrict out, Vec3f_t a);
+//Vec3f_t vec3f_sub_r(Vec3f_t *restrict out, Vec3f_t a);
 //Vec3f_t vec3f_sub(Vec3f_t a, Vec3f_t b);
 //
-//Vec3f_t vec3f_scale_r(Vec3f_t *__restrict out, float scale);
+//Vec3f_t vec3f_scale_r(Vec3f_t *restrict out, float scale);
 //Vec3f_t vec3f_scale(Vec3f_t a, float scale);

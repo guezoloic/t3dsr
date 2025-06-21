@@ -1,31 +1,38 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 
+#include "vec3.h"
+#ifdef _MSC_VER
+#define ALIGN16 __declspec(align(16))
+#else
+#define ALIGN16 __attribute__((aligned(16)))
+#endif
+
 // must be aligned by 16 Bytes (less instruction executed for SSE)
 typedef union
 {
     struct { float x, y, z, w; };
     float data[4];
-}__attribute__((aligned(16))) Vec4f_t;
+} ALIGN16 Vec4f_t;
 
-Vec4f_t vec4f_from_array(const float *__restrict val);
+Vec4f_t vec4f_from_array(const float *restrict val);
 Vec4f_t vec4f(float x, float y, float z, float w);
 // (f, f, f, f)
 Vec4f_t vec4f_scalar(float f);
 // (0, 0, 0, 0)
 Vec4f_t vec4f_zero(void);
 
-inline static Vec4f_t vec4f_clone(const Vec4f_t *__restrict v)
+inline static Vec4f_t vec4f_clone(const Vec4f_t *restrict v)
 {
     return *v;
 }
-Vec4f_t vec4f_add_r(Vec4f_t *__restrict out, Vec4f_t a);
+Vec4f_t vec4f_add_r(Vec4f_t *restrict out, Vec4f_t a);
 Vec4f_t vec4f_add(Vec4f_t a, Vec4f_t b);
 
-Vec4f_t vec4f_sub_r(Vec4f_t *__restrict out, Vec4f_t a);
+Vec4f_t vec4f_sub_r(Vec4f_t *restrict out, Vec4f_t a);
 Vec4f_t vec4f_sub(Vec4f_t a, Vec4f_t b);
 
-Vec4f_t vec4f_scale_r(Vec4f_t *__restrict out, float scale);
+Vec4f_t vec4f_scale_r(Vec4f_t *restrict out, float scale);
 Vec4f_t vec4f_scale(Vec4f_t a, float scale);
 
 float vec4_dot(Vec4f_t a, Vec4f_t b);
