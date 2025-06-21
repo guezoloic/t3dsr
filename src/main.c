@@ -3,7 +3,7 @@
 
 int main(void) 
 {
-    Vec4f_t vec = vec4(1.f, 2.f, 8.f, 4.f);
+    Vec4f_t vec = vec4f(1.f, 2.f, 8.f, 4.f);
     printf("%f %f %f %f\n", vec.x, vec.y, vec.z, vec.w);
     
     Vec4f_t vec2 = vec4f_clone(&vec);

@@ -8,14 +8,14 @@ typedef union
     float data[4];
 }__attribute__((aligned(16))) Vec4f_t;
 
-Vec4f_t vec4f_from_array(float *__restrict val);
-Vec4f_t vec4(float x, float y, float z, float w);
+Vec4f_t vec4f_from_array(const float *__restrict val);
+Vec4f_t vec4f(float x, float y, float z, float w);
 // (f, f, f, f)
 Vec4f_t vec4f_scalar(float f);
 // (0, 0, 0, 0)
 Vec4f_t vec4f_zero(void);
 
-inline static Vec4f_t vec4f_clone(Vec4f_t *__restrict v)
+inline static Vec4f_t vec4f_clone(const Vec4f_t *__restrict v)
 {
     return *v;
 }
