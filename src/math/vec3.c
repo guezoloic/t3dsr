@@ -6,7 +6,7 @@
 //
 
 #include "vec3.h"
-#include "common_math.h"
+#include "mconfig.h"
 
 #define VEC_SIZE 3
 

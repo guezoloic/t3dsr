@@ -1,5 +1,4 @@
 #include "vec4.h"
-#include "common_math.h"
 
 #define VEC_SIZE 4
 
@@ -89,8 +88,8 @@ Vec4f_t vec4f_sub_r(Vec4f_t *restrict out, Vec4f_t a)
     _mm_store_ps(out->data, vres);
 
 #elif defined (SIMD_ARCH)
-    float32x4_t va = vld1q_f32(a.data);
-    float32x4_t vb = vld1q_f32(out->data);
+    float32x4_t va = vld1q_f32(out->data);
+    float32x4_t vb = vld1q_f32(a.data);
     float32x4_t vres = vsubq_f32(va, vb);
     vst1q_f32(out->data, vres);
 
