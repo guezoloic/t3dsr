@@ -7,7 +7,7 @@ Vec4f_t vec4f(float x, float y, float z, float w)
     return (Vec4f_t){.x = x, .y = y, .z = z, .w = w};
 }
 
-Vec4f_t vec4f_from_array(const float *restrict val)
+Vec4f_t vec4f_from_array(const float *__restrict val)
 {
     Vec4f_t vec;
 #if defined (SIMD_X86)
@@ -52,7 +52,7 @@ Vec4f_t vec4f_zero(void)
     return vec4f_scalar(0.f);
 }
 
-Vec4f_t vec4f_add_r(Vec4f_t *restrict out, Vec4f_t a)
+Vec4f_t vec4f_add_r(Vec4f_t *__restrict out, Vec4f_t a)
 {
 #if defined (SIMD_X86)
     __m128 va = _mm_load_ps(a.data);
@@ -79,7 +79,7 @@ Vec4f_t vec4f_add(Vec4f_t a, Vec4f_t b)
     return a;
 }
 
-Vec4f_t vec4f_sub_r(Vec4f_t *restrict out, Vec4f_t a)
+Vec4f_t vec4f_sub_r(Vec4f_t *__restrict out, Vec4f_t a)
 {
 #if defined (SIMD_X86)   
     __m128 va = _mm_load_ps(out->data);
@@ -107,7 +107,7 @@ Vec4f_t vec4f_sub(Vec4f_t a, Vec4f_t b)
     return a;
 }
 
-Vec4f_t vec4f_scale_r(Vec4f_t *restrict out, float scalar)
+Vec4f_t vec4f_scale_r(Vec4f_t *__restrict out, float scalar)
 {
 #if defined (SIMD_X86)
     __m128 va = _mm_load_ps(out->data);
@@ -134,24 +134,40 @@ Vec4f_t vec4f_scale(Vec4f_t a, float scalar)
     return a;
 }
 
-//float vec4f_dot(Vec4f_t a, Vec4f_t b)
-//{
-//    float result;
-//#if defined (SIMD_X86)
-//    __m128 va = _mm_load_ps(a.data);
-//    __m128 vb = _mm_load_ps(b.data);
-//    __m128 vres = _mm_mul_ps(va, vb);
-//    
-//    __m128 shuf = 
-//    result = 0.f;
-//    
-//#elif defined (SIMD_ARCH)
-//    result = 0.f;
-//#else
-//    result = a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
-//#endif
-//    return result;
-//}
+float vec4f_dot(Vec4f_t a, Vec4f_t b)
+{
+    float result;
+#if defined (SIMD_X86)
+    __m128 va = _mm_load_ps(a.data);
+    __m128 vb = _mm_load_ps(b.data);
+    __m128 vmul = _mm_mul_ps(va, vb);
+    
+//    [y*y y*y, w*w, w*w]
+    __m128 shuf = _mm_movehdup_ps(vmul);
+//    [x*x+y*y, y*y+y*y, z*z+w*w, w*w+w*w]
+    __m128 sum = _mm_add_ps(vmul, shuf);
+    
+//    [z*z+w*w, w*w+w*w, ?, ?]
+    shuf = _mm_movehl_ps(shuf, sum);
+//    [x*x+y*y+z*z+w*w, ?, ?, ?]
+    sum = _mm_add_ss(sums, shuf);
+    
+    result = __mm_cvtss_f32(sum);
+    
+#elif defined (SIMD_ARCH)
+    float32x4_t va = vld1q_f32(a.data);
+    float32x4_t vb = vld1q_f32(b.data);
+    
+    float32x4_t vmul = vmulq_f32(va, vb);
+    float32x2_t sum_pair = vadd_f32(vget_low_f32(vmul), vget_high_f32(vmul));
+    float32x2_t final_sum = vpadd_f32(sum_pair, sum_pair);
+    
+    result = vget_lane_f32(final_sum, 0);
+#else
+    result = a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+#endif
+    return result;
+}
 
 // float vec4_dot(Vec4_t a, Vec4_t b)
 // {
