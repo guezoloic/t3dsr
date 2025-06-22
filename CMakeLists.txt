@@ -7,6 +7,7 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.c)
 file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS src/*.h)
 
 add_executable(main ${SOURCES} ${HEADERS})
+target_link_libraries(main m)
 
 # ==== tests ====
 enable_testing()
@@ -16,5 +17,6 @@ list(FILTER SOURCES EXCLUDE REGEX ".*src/main\\.c$")
 
 if(TEST_SOURCES)
     add_executable(tests ${TEST_SOURCES} ${SOURCES})
+    target_link_libraries(tests m)
     add_test(NAME tests COMMAND tests)
 endif()

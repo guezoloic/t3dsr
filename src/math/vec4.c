@@ -52,7 +52,7 @@ Vec4f_t vec4f_zero(void)
     return vec4f_scalar(0.f);
 }
 
-Vec4f_t vec4f_add_r(Vec4f_t *__restrict out, Vec4f_t a)
+Vec4f_t* vec4f_add_r(Vec4f_t *__restrict out, Vec4f_t a)
 {
 #if defined (SIMD_X86)
     __m128 va = _mm_load_ps(a.data);
@@ -70,7 +70,7 @@ Vec4f_t vec4f_add_r(Vec4f_t *__restrict out, Vec4f_t a)
         out->data[i] += a.data[i];
     }
 #endif
-    return *out;
+    return out;
 }
 
 Vec4f_t vec4f_add(Vec4f_t a, Vec4f_t b)
@@ -79,7 +79,7 @@ Vec4f_t vec4f_add(Vec4f_t a, Vec4f_t b)
     return a;
 }
 
-Vec4f_t vec4f_sub_r(Vec4f_t *__restrict out, Vec4f_t a)
+Vec4f_t* vec4f_sub_r(Vec4f_t *__restrict out, Vec4f_t a)
 {
 #if defined (SIMD_X86)   
     __m128 va = _mm_load_ps(out->data);
@@ -98,7 +98,7 @@ Vec4f_t vec4f_sub_r(Vec4f_t *__restrict out, Vec4f_t a)
         out->data[i] -= a.data[i];
     }
 #endif
-    return *out;
+    return out;
 }
 
 Vec4f_t vec4f_sub(Vec4f_t a, Vec4f_t b)
@@ -107,7 +107,7 @@ Vec4f_t vec4f_sub(Vec4f_t a, Vec4f_t b)
     return a;
 }
 
-Vec4f_t vec4f_scale_r(Vec4f_t *__restrict out, float scalar)
+Vec4f_t* vec4f_scale_r(Vec4f_t *__restrict out, float scalar)
 {
 #if defined (SIMD_X86)
     __m128 va = _mm_load_ps(out->data);
@@ -125,7 +125,7 @@ Vec4f_t vec4f_scale_r(Vec4f_t *__restrict out, float scalar)
         out->data[i] *= scalar;
     }
 #endif
-    return *out;
+    return out;
 }
 
 Vec4f_t vec4f_scale(Vec4f_t a, float scalar)
@@ -163,12 +163,12 @@ float vec4f_dot(Vec4f_t a, Vec4f_t b)
 #endif
 }
 
-Vec4f_t vec4f_norm_r(Vec4f_t *__restrict v)
+Vec4f_t* vec4f_norm_r(Vec4f_t *__restrict v)
 {
     float length = vec4f_len(*v);
     if (length < FLT_EPSILON) *v = vec4f_zero();
     vec4f_scale_r(v, 1.f / length);
-    return *v;
+    return v;
 }
 
 Vec4f_t vec4f_norm(Vec4f_t v)
@@ -177,7 +177,7 @@ Vec4f_t vec4f_norm(Vec4f_t v)
     return v;
 }
 
-Vec4f_t vec4f_lerp_r(Vec4f_t *__restrict a, Vec4f_t b, float t)
+Vec4f_t* vec4f_lerp_r(Vec4f_t *__restrict a, Vec4f_t b, float t)
 {
     t = fmaxf(0.f, fminf(t, 1.f));
     
@@ -186,7 +186,7 @@ Vec4f_t vec4f_lerp_r(Vec4f_t *__restrict a, Vec4f_t b, float t)
     a->z += t * (b.z - a->z);
     a->w += t * (b.w - a->w);
     
-    return *a;
+    return a;
 }
 
 Vec4f_t vec4f_lerp(Vec4f_t a, Vec4f_t b, float t)
