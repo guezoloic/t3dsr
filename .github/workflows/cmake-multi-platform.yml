@@ -21,6 +21,7 @@ jobs:
       # 2. <Linux, Release, latest GCC compiler toolchain on the default runner image, default generator>
       # 3. <Linux, Release, latest Clang compiler toolchain on the default runner image, default generator>
       #
+      # other: arm64: windows and linux
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
         os: [ubuntu-latest, windows-latest, ubuntu-24.04-arm, windows-11-arm]
@@ -49,6 +50,10 @@ jobs:
           - os: windows-latest
             c_compiler: gcc
           - os: windows-latest
+            c_compiler: clang
+          - os: windows-11-arm
+            c_compiler: gcc
+          - os: windows-11-arm
             c_compiler: clang
           - os: ubuntu-latest
             c_compiler: cl
