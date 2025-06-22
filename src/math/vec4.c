@@ -136,23 +136,18 @@ Vec4f_t vec4f_scale(Vec4f_t a, float scalar)
 
 float vec4f_dot(Vec4f_t a, Vec4f_t b)
 {
-    float result;
 #if defined (SIMD_X86)
     __m128 va = _mm_load_ps(a.data);
     __m128 vb = _mm_load_ps(b.data);
     __m128 vmul = _mm_mul_ps(va, vb);
-    
-//    [y*y y*y, w*w, w*w]
-    __m128 shuf = _mm_movehdup_ps(vmul);
-//    [x*x+y*y, y*y+y*y, z*z+w*w, w*w+w*w]
-    __m128 sum = _mm_add_ps(vmul, shuf);
-    
-//    [z*z+w*w, w*w+w*w, ?, ?]
-    shuf = _mm_movehl_ps(shuf, sum);
-//    [x*x+y*y+z*z+w*w, ?, ?, ?]
-    sum = _mm_add_ss(sums, shuf);
-    
-    result = __mm_cvtss_f32(sum);
+
+    __m128 shuf = _mm_shuffle_ps(vmul, vmul, _MM_SHUFFLE(2, 3, 0, 1)); // [y, y, w, w]
+    __m128 sum = _mm_add_ps(vmul, shuf); // [x+y, y+y, z+w, w+w]
+
+    shuf = _mm_movehl_ps(shuf, sum); // [z+w, w+w, w, w]
+    sum = _mm_add_ss(sum, shuf); // [x+y+z+w, y+y, z+w, w+w]
+
+    return _mm_cvtss_f32(sum); 
     
 #elif defined (SIMD_ARCH)
     float32x4_t va = vld1q_f32(a.data);
@@ -162,11 +157,10 @@ float vec4f_dot(Vec4f_t a, Vec4f_t b)
     float32x2_t sum_pair = vadd_f32(vget_low_f32(vmul), vget_high_f32(vmul));
     float32x2_t final_sum = vpadd_f32(sum_pair, sum_pair);
     
-    result = vget_lane_f32(final_sum, 0);
+    return vget_lane_f32(final_sum, 0);
 #else
-    result = a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+    return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 #endif
-    return result;
 }
 
 // float vec4_dot(Vec4_t a, Vec4_t b)
