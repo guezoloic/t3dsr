@@ -11,6 +11,7 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    name: ${{ matrix.name }}
 
     strategy:
       # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
@@ -23,12 +24,12 @@ jobs:
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        build_type: [Release]
         include:
           - os: macos-latest
             arch: arm64
             c_compiler: clang
             cpp_compiler: clang++
+            build_type: Release
             name: macOS Clang arm64
 
           - os: windows-latest
@@ -36,14 +37,16 @@ jobs:
             c_compiler: cl
             cpp_compiler: cl
             vs_arch: x64
+            build_type: Release
             name: Windows MSVC x64
 
           - os: ubuntu-latest
             arch: x86_64
             c_compiler: gcc
             cpp_compiler: g++
+            build_type: Release
             name: Linux GCC x86_64
-
+            
     steps:
     - uses: actions/checkout@v4
 
