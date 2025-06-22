@@ -163,74 +163,77 @@ float vec4f_dot(Vec4f_t a, Vec4f_t b)
 #endif
 }
 
-// float vec4_dot(Vec4_t a, Vec4_t b)
-// {
-//     return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
-// }
+Vec4f_t vec4f_norm_r(Vec4f_t *__restrict v)
+{
+    float length = vec4f_len(*v);
+    if (length < FLT_EPSILON) *v = vec4f_zero();
+    vec4f_scale_r(v, 1.f / length);
+    return *v;
+}
 
-// float vec4_len(Vec4_t v)
-// {
-//     return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
-// }
+Vec4f_t vec4f_norm(Vec4f_t v)
+{
+    vec4f_norm_r(&v);
+    return v;
+}
 
-// Vec4_t vec4_norm(Vec4_t v)
-// {
-//     float length = vec4_len(v);
-//     if (length == 0.f) return vec4(0, 0, 0, 0);
+Vec4f_t vec4f_lerp_r(Vec4f_t *__restrict a, Vec4f_t b, float t)
+{
+    t = fmaxf(0.f, fminf(t, 1.f));
+    
+    a->x += t * (b.x - a->x);
+    a->y += t * (b.y - a->y);
+    a->z += t * (b.z - a->z);
+    a->w += t * (b.w - a->w);
+    
+    return *a;
+}
 
-//     return vec4_scale(v, 1.f / length);
-// }
+Vec4f_t vec4f_lerp(Vec4f_t a, Vec4f_t b, float t)
+{
+    vec4f_lerp_r(&a, b, t);
+    return a;
+}
 
-// Vec4_t vec4_lerp(Vec4_t a, Vec4_t b, float t)
-// {
-//     t = fmaxf(0.f, fminf(t, 1.f));
+ float vec4f_angle(Vec4f_t a, Vec4f_t b)
+ {
+     float lenA = vec4f_len(a);
+     float lenB = vec4f_len(b);
 
-//     return vec4(
-//         a.x + t * (b.x - a.x),
-//         a.y + t * (b.y - a.y),
-//         a.z + t * (b.z - a.z),
-//         a.w + t * (b.w - a.w)
-//     );
-// }
+     if (isnan(lenA) || isnan(lenB)
+         || lenA < FLT_EPSILON
+         || lenB < FLT_EPSILON)
+         return NAN;
 
-// float vec4Angle(Vec4_t a, Vec4_t b)
-// {
-//     float lenA = vec4_len(a);
-//     float lenB = vec4_len(b);
+     float dot = vec4f_dot(a, b);
+     float cosTheta = dot / (lenA * lenB);
 
-//     if (isnan(lenA) || isnan(lenB)
-//         || lenA < FLT_EPSILON
-//         || lenB < FLT_EPSILON)
-//         return NAN;
+     cosTheta = fmaxf(-1.f, fminf(cosTheta, 1.f));
 
-//     float dot = vec4_dot(a, b);
-//     float cosTheta = dot / (lenA * lenB);
+     return acosf(cosTheta);
+ }
 
-//     cosTheta = fmaxf(-1.f, fminf(cosTheta, 1.f));
 
-//     return acosf(cosTheta);
-// }
+ Vec4f_t vec4f_proj(Vec4f_t a, Vec4f_t b)
+ {
+     float dotA = vec4f_dot(a, b);
+     float dotB = vec4f_dot(b, b);
 
-// Vec4_t vec4_proj(Vec4_t a, Vec4_t b)
-// {
-//     float dotA = vec4_dot(a, b);
-//     float dotB = vec4_dot(b, b);
+     float scale = dotA / dotB;
+     return vec4f_scale(b, scale);
+ }
 
-//     float scale = dotA / dotB;
-//     return vec4_scale(b, scale);
-// }
+ Vec4f_t vec4f_refl(Vec4f_t v, Vec4f_t normal)
+ {
+     Vec4f_t proj = vec4f_proj(v, normal);
+     Vec4f_t scal = vec4f_scale(proj, 2.f);
+     Vec4f_t rlt = vec4f_sub(v, scal);
+     return rlt;
+ }
 
-// Vec4_t vec4_refl(Vec4_t v, Vec4_t normal)
-// {
-//     Vec4_t proj = vec4_proj(v, normal);
-//     Vec4_t scal = vec4_scale(proj, 2.f);
-//     Vec4_t rlt = vec4_sub(v, scal);
-//     return rlt;
-// }
-
-// float vec4_dist(Vec4_t a, Vec4_t b)
-// {
-//     Vec4_t vsub = vec4_sub(a, b);
-//     float rlt = vec4_len(vsub);
-//     return rlt;
-// }
+ float vec4f_dist(Vec4f_t a, Vec4f_t b)
+ {
+     Vec4f_t vsub = vec4f_sub(a, b);
+     float rlt = vec4f_len(vsub);
+     return rlt;
+ }

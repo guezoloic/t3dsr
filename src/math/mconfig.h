@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <float.h>
 
 #if defined(__x86_64__) || defined(__i386__)
     #define SIMD_X86
