@@ -161,7 +161,7 @@ float vec3f_dot(Vec3f_t a, Vec3f_t b)
     
     return vget_lane_f32(final_sum, 0);
 #else
-    return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+    return a.x * b.x + a.y * b.y + a.z * b.z;
 #endif
 }
 

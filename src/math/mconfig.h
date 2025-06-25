@@ -8,12 +8,14 @@
 #include <math.h>
 #include <float.h>
 
-#if defined(__x86_64__) || defined(__i386__)
+#if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) 
     #define SIMD_X86
+    #define SIMD_ENABLE
     #include <xmmintrin.h>
 
-#elif defined(__aarch64__) || defined(__arm64__)
+#elif defined(__aarch64__) || defined(__arm64__) || defined(_M_ARM64)
     #define SIMD_ARCH
+    #define SIMD_ENABLE
     #include <arm_neon.h>
 
 #else
