@@ -28,25 +28,22 @@ Vec3f_t vec3f_from_array(const float *__restrict val)
 
 Vec3f_t vec3f_scalar(float f)
 {
-    Vec3f_t vec4;
+    Vec3f_t vec3;
 
-// store f x 4 in register
-// add all register into data
 #if defined(SIMD_X86)
     __m128 scalar = _mm_set1_ps(f);
-    _mm_store_ps(vec4.data, scalar);
+    _mm_store_ps(vec3.data, scalar);
 
 #elif defined(SIMD_ARCH)
     float32x4_t scalar = vdupq_n_f32(f);
-    vst1q_f32(vec4.data, scalar);
+    vst1q_f32(vec3.data, scalar);
 
-// add one by one each value to their specific address
 #else
     for (int i = 0; i < VEC_SIZE; i++) {
-        vec4.data[i] = f;
+        vec3.data[i] = f;
     }
 #endif
-    return vec4;
+    return vec3;
 }
 
 Vec3f_t vec3f_zero(void)
