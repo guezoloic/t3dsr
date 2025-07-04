@@ -1,27 +1,69 @@
-// #include "mat4.h"
-// #include "math.h"
+#include "mat4.h"
 
-// Mat4_t mat4(const float arr[16]) 
-// {
-//     Mat4_t mat;
-//     memcpy(mat.m, arr, 16*sizeof(float));
-//     return mat;
-// }
+Mat4f_t mat4f_from_array(const float arr[16])
+{
+    Mat4f_t mat;
+    for(int i = 0; i<MAT_SIZE; i+=4) {
+#if defined (SIMD_X86)
+        __m128 line = _mm_load_ps(&arr[i]);
+        _mm_store_ps(&mat.m[i], line);
+#elif defined (SIMD_ARCH)
+        float32x4_t line = vld1q_f32(&arr[i]);
+        vst1q_f32(&mat.m[i], line);
+#else
+        for(int j = 0; j<4; j++) {
+            mat.m[i+j] = arr[i+j];
+        }
+#endif
+    }
+    return mat;
+}
 
-// Mat4_t mat4_zro(void) 
-// {
-//     return (Mat4_t){0};
-// }
+Mat4f_t mat4f_scalar(float f)
+{
+    Mat4f_t mat;
+    for(int i = 0; i<MAT_SIZE; i+=4) {
+        #if defined (SIMD_X86)
+        __m128 line_scalar = _mm_set1_ps(f);
+        _mm_store_ps(&mat.m[i], line_scalar);
+        #elif defined (SIMD_ARCH)
+        float32x4_t line_scalar = vdupq_n_f32(f);
+        vst1q_f32(&mat.m[i], line_scalar);
+        #else
+        for(int j = 0; j<4; j++) {
+            mat.m[i+j] = f;
+        }
+        #endif
+    }
+    return mat;
+}
 
-// Mat4_t mat4_ity(void) 
-// {
-//     return (Mat4_t) {{
-//         1, 0, 0, 0, 
-//         0, 1, 0, 0,
-//         0, 0, 1, 0,
-//         0, 0, 0, 1,
-//     }};
-// }
+Mat4f_t mat4f_zero()
+{
+#if defined (SIMD_X86)
+    Mat4f_t mat;
+    
+    for(int i = 0; i<MAT_SIZE; i+=4) {
+        __m128 line_zero = _mm_setzero_ps();
+        _mm_store_ps(&mat.m[i], line_zero);
+    }
+
+    return mat;
+#else
+    return mat4f_scalar(0.f);
+#endif
+}
+
+Mat4f_t mat4f_identity()
+{
+    Mat4f_t mat = mat4f_zero();
+    mat.m[0] = 1.f;
+    mat.m[5] = 1.f;
+    mat.m[10] = 1.f;
+    mat.m[15] = 1.f;
+    return mat;
+}
+
 
 // Mat4_t mat4_add(const Mat4_t* m1, const Mat4_t* m2) 
 // {

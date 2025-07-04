@@ -3,11 +3,13 @@
 
 #include "mconfig.h"
 
+#define VEC_SIZE 4
+
 // must be aligned by 16 Bytes (less instruction executed for SSE)
 typedef union
 {
     struct { float x, y, z, w; };
-    float data[4];
+    float data[VEC_SIZE];
 } ALIGN16 Vec4f_t;
 
 Vec4f_t vec4f_from_array(const float *__restrict val);

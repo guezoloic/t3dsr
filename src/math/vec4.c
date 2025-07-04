@@ -1,7 +1,5 @@
 #include "vec4.h"
 
-#define VEC_SIZE 4
-
 Vec4f_t vec4f(float x, float y, float z, float w) 
 {
     return (Vec4f_t){.x = x, .y = y, .z = z, .w = w};
