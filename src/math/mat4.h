@@ -15,11 +15,16 @@ Mat4f_t mat4f_scalar(float f);
 Mat4f_t mat4f_zero(void);
 Mat4f_t mat4f_identity(void);
 
-// Mat4_t mat4_zro(void);
+inline static Mat4f_t mat4f_clone(const Mat4f_t *__restrict out)
+{
+    return *out;
+}
 
-// Mat4_t mat4_ity(void);
+Mat4f_t mat4f_add(const Mat4f_t* m1, const Mat4f_t* m2);
+Mat4f_t* mat4f_add_r(Mat4f_t* out, const Mat4f_t* m2);
 
-// Mat4_t mat4_add(const Mat4_t* m1, const Mat4_t* m2);
+Mat4f_t mat4f_sub(const Mat4f_t* m1, const Mat4f_t* m2);
+Mat4f_t* mat4f_sub_r(Mat4f_t* out, const Mat4f_t* m2);
 
 // Mat4_t mat4_sub(const Mat4_t* m1, const Mat4_t* m2);
 

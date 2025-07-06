@@ -23,13 +23,15 @@ Mat4f_t mat4f_scalar(float f)
 {
     Mat4f_t mat;
     for(int i = 0; i<MAT_SIZE; i+=4) {
-        #if defined (SIMD_X86)
+#if defined (SIMD_X86)
         __m128 line_scalar = _mm_set1_ps(f);
         _mm_store_ps(&mat.m[i], line_scalar);
-        #elif defined (SIMD_ARCH)
+
+#elif defined (SIMD_ARCH)
         float32x4_t line_scalar = vdupq_n_f32(f);
         vst1q_f32(&mat.m[i], line_scalar);
-        #else
+
+#else
         for(int j = 0; j<4; j++) {
             mat.m[i+j] = f;
         }
@@ -64,45 +66,73 @@ Mat4f_t mat4f_identity()
     return mat;
 }
 
+Mat4f_t* mat4f_add_r(Mat4f_t *out, const Mat4f_t *m2)
+{
+    for(int i = 0; i<MAT_SIZE; i+=4) {
+#if defined (SIMD_X86)
+        __m128 ma = _mm_load_ps(&out->m[i]);
+        __m128 mb = _mm_load_ps(&m2->m[i]);
 
-// Mat4_t mat4_add(const Mat4_t* m1, const Mat4_t* m2) 
-// {
-//     Mat4_t mat;
+        __m128 mres = _mm_add_ps(ma, mb);
+        _mm_store_ps(&out->m[i], mres);
 
-// #if defined(__x86_64__) || defined(__i386__)
-    
-//     for (int i = 0; i < 16; i += 4) {
-//         __m128 a = _mm_loadu_ps(&m1->m[i]);
-//         __m128 b = _mm_loadu_ps(&m2->m[i]);
-//         __m128 c = _mm_add_ps(a, b);
-//         _mm_storeu_ps(&mat.m[i], c);
-//     }
-// #elif defined(__aarch64__)
-//     for (int i = 0; i < 16; i += 4) {
-//         float32x4_t a = vld1q_f32(&m1->m[i]);
-//         float32x4_t b = vld1q_f32(&m2->m[i]);
-//         float32x4_t c = vaddq_f32(a, b);
-//         vst1q_f32(&mat.m[i], c);
-//     }
-// #else
-//     for (int i = 0; i < 16; i++) {
-//         mat.m[i] = m1->m[i] + m2->m[i];
-//     }
-// #endif
+#elif defined (SIMD_ARCH)
+        float32x4_t ma = vld1q_f32(&out->m[i]);
+        float32x4_t mb = vld1q_f32(&m2->m[i]);
+        
+        float32x4_t mres = vaddq_f32(ma, mb);
 
-//     return mat;
-// }
+        vst1q_f32(&out->m[i], mres);
+        
+#else
+        for (int j = 0; j < 4; j++) {
+            out->m[i + j] += m2->m[i + j];
+        }
+#endif
+    }
+    return out;
+}
 
-// Mat4_t mat4_sub(const Mat4_t* m1, const Mat4_t* m2) 
-// {
-//     Mat4_t mat;
+Mat4f_t mat4_add(const Mat4f_t* m1, const Mat4f_t* m2) 
+{
+    Mat4f_t mout = mat4f_clone(m1);
+    mat4f_add_r(&mout, m2);
+    return mout;
+}
 
-//     for(int i = 0; i<16; i++) {
-//         mat.m[i] = m1->m[i] - m2->m[i];
-//     }
+Mat4f_t* mat4f_sub_r(Mat4f_t *out, const Mat4f_t *m2)
+{
+    for(int i = 0; i<MAT_SIZE; i+=4) {
+#if defined (SIMD_X86)
+        __m128 ma = _mm_load_ps(&out->m[i]);
+        __m128 mb = _mm_load_ps(&m2->m[i]);
 
-//     return mat;
-// }
+        __m128 mres = _mm_sub_ps(ma, mb);
+        _mm_store_ps(&out->m[i], mres);
+
+#elif defined (SIMD_ARCH)
+        float32x4_t ma = vld1q_f32(&out->m[i]);
+        float32x4_t mb = vld1q_f32(&m2->m[i]);
+        
+        float32x4_t mres = vsubq_f32(ma, mb);
+
+        vst1q_f32(&out->m[i], mres);
+        
+#else
+        for (int j = 0; j < 4; j++) {
+            out->m[i + j] -= m2->m[i + j];
+        }
+#endif
+    }
+    return out;
+}
+
+Mat4f_t mat4_sub(const Mat4f_t* m1, const Mat4f_t* m2) 
+{
+    Mat4f_t mout = mat4f_clone(m1);
+    mat4f_sub_r(&mout, m2);
+    return mout;
+}
 
 // Mat4_t mat4_scl(const Mat4_t* m, float scalar) 
 // {
