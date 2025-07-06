@@ -134,6 +134,36 @@ Mat4f_t mat4_sub(const Mat4f_t* m1, const Mat4f_t* m2)
     return mout;
 }
 
+Mat4f_t* mat4f_scale_r(Mat4f_t *out, float scalar)
+{
+    for(int i = 0; i<MAT_SIZE; i+=4) {
+#if defined (SIMD_X86)
+        __m128 ma = _mm_load_ps(&out->m[i]);
+        __m128 mb = _mm_set1_ps(scalar);
+        __m128 mres = _mm_mul_ps(ma, mb);
+        _mm_store_ps(&out->m[i], mres);
+
+#elif defined (SIMD_ARCH)
+        float32x4_t ma = vld1q_f32(&out->m[i]);
+        float32x4_t mb = vdupq_n_f32(scalar);
+        float32x4_t mres = vmulq_f32(ma, mb);
+        vst1q_f32(&out->m[i], mres);
+#else
+        for(int j = 0; j<4; j++) {
+            out->m[i+j] *= scalar;
+        }
+#endif
+    }
+    return out;
+}
+
+Mat4f_t mat4f_scale(const Mat4f_t *__restrict m, float scalar)
+{
+    Mat4f_t mout = mat4f_clone(m);
+    mat4f_scale_r(&mout, scalar);
+    return mout;
+}
+
 // Mat4_t mat4_scl(const Mat4_t* m, float scalar) 
 // {
 //     Mat4_t mat;

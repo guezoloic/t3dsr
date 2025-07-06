@@ -26,8 +26,8 @@ Mat4f_t* mat4f_add_r(Mat4f_t* out, const Mat4f_t* m2);
 Mat4f_t mat4f_sub(const Mat4f_t* m1, const Mat4f_t* m2);
 Mat4f_t* mat4f_sub_r(Mat4f_t* out, const Mat4f_t* m2);
 
-// Mat4_t mat4_sub(const Mat4_t* m1, const Mat4_t* m2);
-
+Mat4f_t mat4f_scale(const Mat4f_t *__restrict m, float scalar);
+Mat4f_t* mat4f_scale_r(Mat4f_t *out, float scalar);
 // Mat4_t mat4_scl(const Mat4_t* m, float scalar);
 
 // // row * col
