@@ -30,8 +30,8 @@ Mat4f_t mat4f_scale(const Mat4f_t *__restrict m, float scalar);
 Mat4f_t* mat4f_scale_r(Mat4f_t *out, float scalar);
 
 // row * col
-Mat4f_t mat4_mul(const Mat4f_t* m1, const Mat4f_t* m2);
-Mat4f_t* mat4_mul_r(Mat4f_t* out, const Mat4f_t* m2);
+Mat4f_t mat4f_mul(const Mat4f_t* m1, const Mat4f_t* m2);
+Mat4f_t* mat4f_mul_r(Mat4f_t* out, const Mat4f_t* m2);
 
 // Mat4_t mat4_tpo(const Mat4_t* m);
 
