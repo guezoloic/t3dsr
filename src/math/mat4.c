@@ -164,16 +164,38 @@ Mat4f_t mat4f_scale(const Mat4f_t *__restrict m, float scalar)
     return mout;
 }
 
-// Mat4_t mat4_scl(const Mat4_t* m, float scalar) 
-// {
-//     Mat4_t mat;
+Mat4f_t* mat4_mul_r(Mat4f_t* out, const Mat4f_t* m2)
+{
+    Mat4f_t clone = mat4f_clone(out);
 
-//     for(int i = 0; i<16; i++) {
-//         mat.m[i] = m->m[i] * scalar;
-//     }
+    for (int row = 0; row<4; row++) {
+#if defined (SIMD_X86)
+        __m128 mrow = _mm_load_ps(&clone.m[row * 4]);
 
-//     return mat;
-// }
+        for (int col = 0; col<4; col++) {
+            __m128 mcol = _mm_set_ps(
+                m2->m[3 * 4 + col],
+                m2->m[2 * 4 + col],
+                m2->m[1 * 4 + col],
+                m2->m[0 * 4 + col]
+            );
+            __m128 mmul = _mm_mul_ps(mrow, mcol);
+
+            __m128 shuf = _mm_shuffle_ps(mmul, mmul, _MM_SHUFFLE(2, 3, 0, 1)); // [y, y, w, w]
+            __m128 sum = _mm_add_ps(mmul, shuf); // [x+y, y+y, z+w, w+w]
+
+            shuf = _mm_movehl_ps(shuf, sum); // [z+w, w+w, w, w]
+            sum = _mm_add_ss(sum, shuf); // [x+y+z+w, y+y, z+w, w+w]
+            float mres = _mm_cvtss_f32(sum);
+            
+            out->m[row * 4 + col] = mres;
+        }
+#elif defined (SIMD_ARCH)
+#else
+#endif
+    }
+    return out;
+}
 
 // Mat4_t mat4_mul(const Mat4_t* m1, const Mat4_t* m2) 
 // {
