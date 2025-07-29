@@ -227,7 +227,22 @@ Mat4f_t mat4_mul(const Mat4f_t* m1, const Mat4f_t* m2)
     return mout;
 }
 
-Mat4f_t* mat4_tpo_r(Mat4f_t *__restrict m)
+Mat4f_t* mat4_tpo_r(Mat4f_t *__restrict out)
 {
-    return m;    
+    Mat4f_t clone = mat4f_clone(out);
+    
+    for(int i = 0; i < MAT_DIM; i++) {
+#if defined (SIMD_X86)
+
+
+#elif defined (SIMD_ARCH)
+#else
+        int dim_i = i * MAT_DIM;
+
+        for (int j = 0; j < MAT_DIM; j++) {
+            out->m[dim_i + j] = clone.m[(j * MAT_DIM) + i];
+        }
+#endif
+    }
+    return out;    
 }
