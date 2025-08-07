@@ -232,9 +232,9 @@ Mat4f_t* mat4f_tpo_r(Mat4f_t *__restrict out)
     Mat4f_t clone = mat4f_clone(out);
     
     #if defined (SIMD_X86)
-    __m128 res[4];
+    __m128 row[4];
     for (int i=0; i<MAT_DIM; i++) {
-        __m128 mrow = _mm_load_ps(&clone.m[i*MAT_DIM]);
+        row[i] = _mm_load_ps(&clone.m[i * MAT_DIM]);
     }
     
     __m128 t0 = _mm_unpacklo_ps(row[0], row[1]);
@@ -298,6 +298,6 @@ Mat4f_t* mat4f_tpo_r(Mat4f_t *__restrict out)
 Mat4f_t mat4f_tpo(const Mat4f_t *restrict m)
 {
     Mat4f_t res = mat4f_clone(m);
-    mat4f_clone(&res);
+    mat4f_tpo_r(&res);
     return res;
 }
