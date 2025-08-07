@@ -227,22 +227,48 @@ Mat4f_t mat4_mul(const Mat4f_t* m1, const Mat4f_t* m2)
     return mout;
 }
 
-Mat4f_t* mat4_tpo_r(Mat4f_t *__restrict out)
+Mat4f_t* mat4f_tpo_r(Mat4f_t *__restrict out)
 {
     Mat4f_t clone = mat4f_clone(out);
     
-    for(int i = 0; i < MAT_DIM; i++) {
-#if defined (SIMD_X86)
+    #if defined (SIMD_X86)
+    __m128 res[4];
+    for (int i=0; i<MAT_DIM; i++) {
+        __m128 mrow = _mm_load_ps(&clone.m[i*MAT_DIM]);
+    }
+    
+    __m128 t0 = _mm_unpacklo_ps(row[0], row[1]);
+    __m128 t1 = _mm_unpackhi_ps(row[0], row[1]);
+    __m128 t2 = _mm_unpacklo_ps(row[2], row[3]);
+    __m128 t3 = _mm_unpackhi_ps(row[2], row[3]);
+
+    __m128 r0 = _mm_movelh_ps(t0, t2);
+    __m128 r1 = _mm_movehl_ps(t2, t0);
+    __m128 r2 = _mm_movelh_ps(t1, t3);
+    __m128 r3 = _mm_movehl_ps(t3, t1);
+
+    _mm_store_ps(&out->m[0 * MAT_DIM], r0);
+    _mm_store_ps(&out->m[1 * MAT_DIM], r1);
+    _mm_store_ps(&out->m[2 * MAT_DIM], r2);
+    _mm_store_ps(&out->m[3 * MAT_DIM], r3);
 
 
 #elif defined (SIMD_ARCH)
 #else
+    for(int i = 0; i < MAT_DIM; i++) {
         int dim_i = i * MAT_DIM;
 
         for (int j = 0; j < MAT_DIM; j++) {
             out->m[dim_i + j] = clone.m[(j * MAT_DIM) + i];
         }
-#endif
     }
+#endif
     return out;    
+}
+
+Mat4f_t mat4f_tpo(const Mat4f_t *restrict m)
+{
+    Mat4f_t res = mat4f_clone(m);
+    mat4f_clone(&res);
+    return res;
 }

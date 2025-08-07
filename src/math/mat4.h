@@ -34,8 +34,8 @@ Mat4f_t* mat4f_scale_r(Mat4f_t *out, float scalar);
 Mat4f_t mat4f_mul(const Mat4f_t* m1, const Mat4f_t* m2);
 Mat4f_t* mat4f_mul_r(Mat4f_t* out, const Mat4f_t* m2);
 
-Mat4f_t mat4_tpo(const Mat4f_t *__restrict m);
-Mat4f_t* mat4_tpo_r(Mat4f_t *__restrict m);
+Mat4f_t mat4f_tpo(const Mat4f_t *__restrict m);
+Mat4f_t* mat4f_tpo_r(Mat4f_t *__restrict m);
 
 // float mat4_det(const Mat4_t* m);
 
