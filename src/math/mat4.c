@@ -241,28 +241,57 @@ Mat4f_t* mat4f_tpo_r(Mat4f_t *__restrict out)
     __m128 t1 = _mm_unpackhi_ps(row[0], row[1]);
     __m128 t2 = _mm_unpacklo_ps(row[2], row[3]);
     __m128 t3 = _mm_unpackhi_ps(row[2], row[3]);
-
+    
     __m128 r0 = _mm_movelh_ps(t0, t2);
     __m128 r1 = _mm_movehl_ps(t2, t0);
     __m128 r2 = _mm_movelh_ps(t1, t3);
     __m128 r3 = _mm_movehl_ps(t3, t1);
-
+    
     _mm_store_ps(&out->m[0 * MAT_DIM], r0);
     _mm_store_ps(&out->m[1 * MAT_DIM], r1);
     _mm_store_ps(&out->m[2 * MAT_DIM], r2);
     _mm_store_ps(&out->m[3 * MAT_DIM], r3);
+    
+    
+    #elif defined (SIMD_ARCH)
+    float32x4_t row[4];
+    for (int i = 0; i < MAT_DIM; i++) {
+        row[i] = vld1q_f32(&clone.m[i * MAT_DIM]);
+    }
 
+    float32x4x2_t t01 = vtrnq_f32(row[0], row[1]);
+    float32x4x2_t t23 = vtrnq_f32(row[2], row[3]);
 
-#elif defined (SIMD_ARCH)
-#else
+    float32x2_t r0_low = vget_low_f32(t01.val[0]);
+    float32x2_t r0_high = vget_low_f32(t23.val[0]);
+    float32x4_t r0 = vcombine_f32(r0_low, r0_high);
+
+    float32x2_t r1_low = vget_low_f32(t01.val[1]);
+    float32x2_t r1_high = vget_low_f32(t23.val[1]);
+    float32x4_t r1 = vcombine_f32(r1_low, r1_high);
+
+    float32x2_t r2_low = vget_high_f32(t01.val[0]);
+    float32x2_t r2_high = vget_high_f32(t23.val[0]);
+    float32x4_t r2 = vcombine_f32(r2_low, r2_high);
+
+    float32x2_t r3_low = vget_high_f32(t01.val[1]);
+    float32x2_t r3_high = vget_high_f32(t23.val[1]);
+    float32x4_t r3 = vcombine_f32(r3_low, r3_high);
+
+    vst1q_f32(&out->m[0 * MAT_DIM], r0);
+    vst1q_f32(&out->m[1 * MAT_DIM], r1);
+    vst1q_f32(&out->m[2 * MAT_DIM], r2);
+    vst1q_f32(&out->m[3 * MAT_DIM], r3);
+    #else
+    
     for(int i = 0; i < MAT_DIM; i++) {
         int dim_i = i * MAT_DIM;
-
+        
         for (int j = 0; j < MAT_DIM; j++) {
             out->m[dim_i + j] = clone.m[(j * MAT_DIM) + i];
         }
     }
-#endif
+    #endif
     return out;    
 }
 
