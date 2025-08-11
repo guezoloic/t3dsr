@@ -1,4 +1,4 @@
-#include "../src/math/mconfig.h"
+#include "../src/math/mat4.h"
 #include <stdio.h>
 
 void config() {

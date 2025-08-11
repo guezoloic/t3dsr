@@ -7,7 +7,7 @@
 
 #include <assert.h>
 #include <stdio.h>
-#include "../src/math/mconfig.h"
+
 #include "../src/math/vec3.h"
 #include "../src/math/vec4.h"
 

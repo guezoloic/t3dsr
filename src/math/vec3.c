@@ -1,7 +1,5 @@
 #include "vec3.h"
 
-#define VEC_SIZE 4
-
 Vec3f_t vec3f(float x, float y, float z)
 {
     Vec3f_t vec = {.x = x, .y = y, .z = z};

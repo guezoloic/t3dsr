@@ -1,7 +1,22 @@
 #ifndef MATRIX4_H
 #define MATRIX4_H
 
-#include "mconfig.h"
+#if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) 
+    #define SIMD_X86
+    #include <xmmintrin.h>
+
+#elif defined(__aarch64__) || defined(__arm64__) || defined(_M_ARM64)
+    #define SIMD_ARCH
+    #include <arm_neon.h>
+
+#else
+#endif
+
+#ifdef _MSC_VER
+    #define ALIGN16 __declspec(align(16))
+#else
+    #define ALIGN16 __attribute__((aligned(16)))
+#endif
 
 #define MAT_SIZE 16
 #define MAT_DIM 4
@@ -37,8 +52,9 @@ Mat4f_t* mat4f_mul_r(Mat4f_t* out, const Mat4f_t* m2);
 Mat4f_t mat4f_tpo(const Mat4f_t *__restrict m);
 Mat4f_t* mat4f_tpo_r(Mat4f_t *__restrict m);
 
-// float mat4_det(const Mat4_t* m);
+float mat4f_det(const Mat4f_t* m);
 
-// Mat4_t mat4_inv(const Mat4_t* m);
+Mat4f_t mat4f_inv(const Mat4f_t* m);
+Mat4f_t* mat4f_inv_r(Mat4f_t* __restrict m);
 
 #endif // MATRIX4_H

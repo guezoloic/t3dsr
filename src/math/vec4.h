@@ -1,9 +1,32 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 
-#include "mconfig.h"
+#include <math.h>
+#include <float.h>
+
+#if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) 
+    #define SIMD_X86
+    #define SIMD_ENABLE
+    #include <xmmintrin.h>
+
+#elif defined(__aarch64__) || defined(__arm64__) || defined(_M_ARM64)
+    #define SIMD_ARCH
+    #define SIMD_ENABLE
+    #include <arm_neon.h>
+
+#else
+    #define SIMD_NONE
+#endif
+
+#ifdef _MSC_VER
+    #define ALIGN16 __declspec(align(16))
+#else
+    #define ALIGN16 __attribute__((aligned(16)))
+#endif
 
 #define VEC_SIZE 4
+
+
 
 // must be aligned by 16 Bytes (less instruction executed for SSE)
 typedef union
@@ -53,5 +76,7 @@ Vec4f_t vec4f_proj(Vec4f_t a, Vec4f_t b);
 Vec4f_t vec4f_refl(Vec4f_t v, Vec4f_t normal);
 
 float vec4f_dist(Vec4f_t a, Vec4f_t b);
+
+#undef VEC_SIZE
 
 #endif // VECTOR4_H

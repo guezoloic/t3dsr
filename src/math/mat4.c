@@ -301,3 +301,21 @@ Mat4f_t mat4f_tpo(const Mat4f_t *restrict m)
     mat4f_tpo_r(&res);
     return res;
 }
+
+float mat4f_det(const Mat4f_t* m)
+{
+    float det;
+    return det;
+}
+
+Mat4f_t* mat4f_inv_r(Mat4f_t* __restrict m)
+{
+    return m;
+}
+
+Mat4f_t mat4f_inv(const Mat4f_t* m)
+{
+    Mat4f_t mout = mat4f_clone(m);
+    mat4f_inv_r(&mout);
+    return mout;
+}

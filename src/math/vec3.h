@@ -8,11 +8,33 @@
 #ifndef vec3_h
 #define vec3_h
 
-#include "mconfig.h"
+#include <math.h>
+#include <float.h>
 
-typedef union
-{
-    struct {float x, y, z; };
+#if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) 
+    #define SIMD_X86
+    #define SIMD_ENABLE
+    #include <xmmintrin.h>
+
+#elif defined(__aarch64__) || defined(__arm64__) || defined(_M_ARM64)
+    #define SIMD_ARCH
+    #define SIMD_ENABLE
+    #include <arm_neon.h>
+
+#else
+    #define SIMD_NONE
+#endif
+
+#ifdef _MSC_VER
+    #define ALIGN16 __declspec(align(16))
+#else
+    #define ALIGN16 __attribute__((aligned(16)))
+#endif
+
+#define VEC_SIZE 3
+
+typedef union {
+    struct { float x, y, z; };
     float data[4];
 } ALIGN16 Vec3f_t;
 
@@ -57,5 +79,7 @@ Vec3f_t vec3f_proj(Vec3f_t a, Vec3f_t b);
 Vec3f_t vec3f_refl(Vec3f_t v, Vec3f_t normal);
 
 float vec3f_dist(Vec3f_t a, Vec3f_t b);
+
+#undef VEC_SIZE
 
 #endif /* vec3_h */
