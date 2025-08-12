@@ -1,6 +1,9 @@
 #ifndef MATRIX4_H
 #define MATRIX4_H
 
+#include <math.h>
+#include <string.h>
+
 #if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) 
     #define SIMD_X86
     #include <xmmintrin.h>
@@ -26,9 +29,16 @@ typedef struct
     float m[MAT_SIZE];
 } ALIGN16 Mat4f_t;
 
+Mat4f_t* mat4f_from_array_r(Mat4f_t *__restrict m, const float arr[16]);
 Mat4f_t mat4f_from_array(const float arr[16]);
+
+Mat4f_t* mat4f_scalar_r(Mat4f_t *__restrict m, float f);
 Mat4f_t mat4f_scalar(float f);
+
+Mat4f_t* mat4f_zero_r(Mat4f_t *__restrict m);
 Mat4f_t mat4f_zero(void);
+
+Mat4f_t* mat4f_identity_r(Mat4f_t *__restrict m);
 Mat4f_t mat4f_identity(void);
 
 inline static Mat4f_t mat4f_clone(const Mat4f_t *__restrict out)

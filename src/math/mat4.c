@@ -1,68 +1,92 @@
 #include "mat4.h"
 
-Mat4f_t mat4f_from_array(const float arr[16])
+Mat4f_t* mat4f_from_array_r(Mat4f_t *__restrict m, const float arr[16])
 {
-    Mat4f_t mat;
     for(int i = 0; i<MAT_SIZE; i+=MAT_DIM) {
 #if defined (SIMD_X86)
         __m128 line = _mm_load_ps(&arr[i]);
-        _mm_store_ps(&mat.m[i], line);
+        _mm_store_ps(&m->m[i], line);
 #elif defined (SIMD_ARCH)
         float32x4_t line = vld1q_f32(&arr[i]);
-        vst1q_f32(&mat.m[i], line);
+        vst1q_f32(&m->m[i], line);
 #else
         for(int j = 0; j<MAT_DIM; j++) {
-            mat.m[i+j] = arr[i+j];
+            m->m[i+j] = arr[i+j];
         }   
 #endif
     }
+    return m;
+}
+
+Mat4f_t mat4f_from_array(const float arr[16])
+{
+    Mat4f_t mat;
+    mat4f_from_array_r(&mat, arr);
     return mat;
+}
+
+Mat4f_t* mat4f_scalar_r(Mat4f_t *__restrict m, float f)
+{
+    for(int i = 0; i<MAT_SIZE; i+=MAT_DIM) {
+#if defined (SIMD_X86)
+        __m128 line_scalar = _mm_set1_ps(f);
+        _mm_store_ps(&m->m[i], line_scalar);
+
+#elif defined (SIMD_ARCH)
+        float32x4_t line_scalar = vdupq_n_f32(f);
+        vst1q_f32(&m->m[i], line_scalar);
+
+#else
+        for(int j = 0; j<MAT_DIM; j++) {
+            m->m[i+j] = f;
+        }
+        #endif
+    }
+    return m;
 }
 
 Mat4f_t mat4f_scalar(float f)
 {
     Mat4f_t mat;
-    for(int i = 0; i<MAT_SIZE; i+=MAT_DIM) {
-#if defined (SIMD_X86)
-        __m128 line_scalar = _mm_set1_ps(f);
-        _mm_store_ps(&mat.m[i], line_scalar);
-
-#elif defined (SIMD_ARCH)
-        float32x4_t line_scalar = vdupq_n_f32(f);
-        vst1q_f32(&mat.m[i], line_scalar);
-
-#else
-        for(int j = 0; j<MAT_DIM; j++) {
-            mat.m[i+j] = f;
-        }
-        #endif
-    }
+    mat4f_scalar_r(&mat, f);
     return mat;
+}
+
+Mat4f_t* mat4f_zero_r(Mat4f_t *__restrict m)
+{
+#if defined (SIMD_X86)
+    for(int i = 0; i<MAT_SIZE; i+=MAT_DIM) {
+        __m128 line_zero = _mm_setzero_ps();
+        _mm_store_ps(&m->m[i], line_zero);
+    }
+
+    return m;
+#else
+    return mat4f_scalar_r(m, 0.f);
+#endif
 }
 
 Mat4f_t mat4f_zero()
 {
-#if defined (SIMD_X86)
     Mat4f_t mat;
-    
-    for(int i = 0; i<MAT_SIZE; i+=MAT_DIM) {
-        __m128 line_zero = _mm_setzero_ps();
-        _mm_store_ps(&mat.m[i], line_zero);
-    }
-
+    mat4f_zero_r(&mat);
     return mat;
-#else
-    return mat4f_scalar(0.f);
-#endif
+}
+
+Mat4f_t* mat4f_identity_r(Mat4f_t *__restrict m)
+{
+    mat4f_zero_r(m);
+    m->m[0] = 1.f;
+    m->m[5] = 1.f;
+    m->m[10] = 1.f;
+    m->m[15] = 1.f;
+    return m;
 }
 
 Mat4f_t mat4f_identity()
 {
-    Mat4f_t mat = mat4f_zero();
-    mat.m[0] = 1.f;
-    mat.m[5] = 1.f;
-    mat.m[10] = 1.f;
-    mat.m[15] = 1.f;
+    Mat4f_t mat;
+    mat4f_identity_r(&mat);
     return mat;
 }
 
@@ -134,7 +158,7 @@ Mat4f_t mat4_sub(const Mat4f_t* m1, const Mat4f_t* m2)
     return mout;
 }
 
-Mat4f_t* mat4f_scale_r(Mat4f_t *out, float scalar)
+Mat4f_t* mat4f_scale_r(Mat4f_t *__restrict out, float scalar)
 {
     for(int i = 0; i<MAT_SIZE; i+=MAT_DIM) {
 #if defined (SIMD_X86)
@@ -220,7 +244,8 @@ Mat4f_t* mat4f_mul_r(Mat4f_t* out, const Mat4f_t* m2)
     }
     return out;
 }
-Mat4f_t mat4_mul(const Mat4f_t* m1, const Mat4f_t* m2)
+
+Mat4f_t mat4f_mul(const Mat4f_t* m1, const Mat4f_t* m2)
 {
     Mat4f_t mout = mat4f_clone(m1);
     mat4f_mul_r(&mout, m2);
@@ -304,13 +329,16 @@ Mat4f_t mat4f_tpo(const Mat4f_t *restrict m)
 
 float mat4f_det(const Mat4f_t* m)
 {
-    float det;
-    return det;
-}
+    const float* a = m->m;
 
-Mat4f_t* mat4f_inv_r(Mat4f_t* __restrict m)
-{
-    return m;
+    float det;
+    det =
+    a[0] * (a[5]*(a[10]*a[15] - a[11]*a[14]) - a[9]*(a[6]*a[15] - a[7]*a[14]) + a[13]*(a[6]*a[11] - a[7]*a[10])) -
+    a[4] * (a[1]*(a[10]*a[15] - a[11]*a[14]) - a[9]*(a[2]*a[15] - a[3]*a[14]) + a[13]*(a[2]*a[11] - a[3]*a[10])) +
+    a[8] * (a[1]*(a[6]*a[15] - a[7]*a[14]) - a[5]*(a[2]*a[15] - a[3]*a[14]) + a[13]*(a[2]*a[7]  - a[3]*a[6])) -
+    a[12]* (a[1]*(a[6]*a[11] - a[7]*a[10]) - a[5]*(a[2]*a[11] - a[3]*a[10]) + a[9] *(a[2]*a[7]  - a[3]*a[6]));
+
+    return det;
 }
 
 Mat4f_t mat4f_inv(const Mat4f_t* m)

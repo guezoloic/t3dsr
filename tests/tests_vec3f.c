@@ -9,7 +9,6 @@
 #include <stdio.h>
 
 #include "../src/math/vec3.h"
-#include "../src/math/vec4.h"
 
 #define EPSILON 1e-6f
 
