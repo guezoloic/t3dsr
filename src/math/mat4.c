@@ -347,3 +347,8 @@ Mat4f_t mat4f_inv(const Mat4f_t* m)
     mat4f_inv_r(&mout);
     return mout;
 }
+
+Mat4f_t* mat4f_inv_r(Mat4f_t* __restrict m)
+{
+    return m;
+}
