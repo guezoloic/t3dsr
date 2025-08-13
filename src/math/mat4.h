@@ -4,6 +4,9 @@
 #include <math.h>
 #include <float.h>
 
+#define MAT_SIZE 16
+#define MAT_DIM 4
+
 #if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) 
     #define SIMD_X86
     #include <xmmintrin.h>
@@ -16,55 +19,112 @@
 #endif
 
 #ifdef _MSC_VER
-    #define ALIGN16 __declspec(align(16))
+    #define ALIGN16 __declspec(align(MAT_SIZE))
 #else
-    #define ALIGN16 __attribute__((aligned(16)))
+    #define ALIGN16 __attribute__((aligned(MAT_SIZE)))
 #endif
 
-#define MAT_SIZE 16
-#define MAT_DIM 4
 
 typedef struct 
 {
     float m[MAT_SIZE];
 } ALIGN16 Mat4f_t;
 
-Mat4f_t* mat4f_from_array_r(Mat4f_t *__restrict m, const float arr[16]);
-Mat4f_t mat4f_from_array(const float arr[16]);
+Mat4f_t* mat4f_from_array_r(Mat4f_t *__restrict m, const float arr[MAT_SIZE]);
+
+static inline Mat4f_t mat4f_from_array(const float arr[MAT_SIZE])
+{
+    Mat4f_t mat;
+    mat4f_from_array_r(&mat, arr);
+    return mat;
+}
+
 
 Mat4f_t* mat4f_scalar_r(Mat4f_t *__restrict m, float f);
-Mat4f_t mat4f_scalar(float f);
+
+static inline Mat4f_t mat4f_scalar(float f)
+{
+    Mat4f_t mat;
+    mat4f_scalar_r(&mat, f);
+    return mat;
+}
 
 Mat4f_t* mat4f_zero_r(Mat4f_t *__restrict m);
-Mat4f_t mat4f_zero(void);
+
+static inline Mat4f_t mat4f_zero(void)
+{
+    Mat4f_t mat;
+    mat4f_zero_r(&mat);
+    return mat;
+}
+
 
 Mat4f_t* mat4f_identity_r(Mat4f_t *__restrict m);
-Mat4f_t mat4f_identity(void);
+
+static inline Mat4f_t mat4f_identity(void)
+{
+    Mat4f_t mat;
+    mat4f_identity_r(&mat);
+    return mat;
+}
 
 inline static Mat4f_t mat4f_clone(const Mat4f_t *__restrict out)
 {
     return *out;
 }
 
-Mat4f_t mat4f_add(const Mat4f_t* m1, const Mat4f_t* m2);
 Mat4f_t* mat4f_add_r(Mat4f_t* out, const Mat4f_t* m2);
 
-Mat4f_t mat4f_sub(const Mat4f_t* m1, const Mat4f_t* m2);
+static inline Mat4f_t mat4f_add(const Mat4f_t* m1, const Mat4f_t* m2)
+{
+    Mat4f_t mout = mat4f_clone(m1);
+    mat4f_add_r(&mout, m2);
+    return mout;
+}
+
 Mat4f_t* mat4f_sub_r(Mat4f_t* out, const Mat4f_t* m2);
 
-Mat4f_t mat4f_scale(const Mat4f_t *__restrict m, float scalar);
+static inline Mat4f_t mat4f_sub(const Mat4f_t* m1, const Mat4f_t* m2)
+{
+    Mat4f_t mout = mat4f_clone(m1);
+    mat4f_sub_r(&mout, m2);
+    return mout;
+}
+
 Mat4f_t* mat4f_scale_r(Mat4f_t *out, float scalar);
+static inline Mat4f_t mat4f_scale(const Mat4f_t *__restrict m, float scalar)
+{
+    Mat4f_t mout = mat4f_clone(m);
+    mat4f_scale_r(&mout, scalar);
+    return mout;
+}
 
 // row * col
-Mat4f_t mat4f_mul(const Mat4f_t* m1, const Mat4f_t* m2);
 Mat4f_t* mat4f_mul_r(Mat4f_t* out, const Mat4f_t* m2);
+static inline Mat4f_t mat4f_mul(const Mat4f_t* m1, const Mat4f_t* m2)
+{
+    Mat4f_t mout = mat4f_clone(m1);
+    mat4f_mul_r(&mout, m2);
+    return mout;
+}
 
-Mat4f_t mat4f_tpo(const Mat4f_t *__restrict m);
 Mat4f_t* mat4f_tpo_r(Mat4f_t *__restrict m);
+static inline Mat4f_t mat4f_tpo(const Mat4f_t *__restrict m)
+{
+    Mat4f_t res = mat4f_clone(m);
+    mat4f_tpo_r(&res);
+    return res;
+}
 
 float mat4f_det(const Mat4f_t* m);
 
-Mat4f_t mat4f_inv(const Mat4f_t* m);
 Mat4f_t* mat4f_inv_r(Mat4f_t* __restrict m);
+
+static inline Mat4f_t mat4f_inv(const Mat4f_t* m)
+{
+    Mat4f_t mout = mat4f_clone(m);
+    mat4f_inv_r(&mout);
+    return mout;
+}
 
 #endif // MATRIX4_H

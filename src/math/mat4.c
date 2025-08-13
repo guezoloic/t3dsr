@@ -18,13 +18,6 @@ Mat4f_t* mat4f_from_array_r(Mat4f_t *__restrict m, const float arr[16])
     return m;
 }
 
-Mat4f_t mat4f_from_array(const float arr[16])
-{
-    Mat4f_t mat;
-    mat4f_from_array_r(&mat, arr);
-    return mat;
-}
-
 Mat4f_t* mat4f_scalar_r(Mat4f_t *__restrict m, float f)
 {
     for(int i = 0; i<MAT_SIZE; i+=MAT_DIM) {
@@ -45,12 +38,6 @@ Mat4f_t* mat4f_scalar_r(Mat4f_t *__restrict m, float f)
     return m;
 }
 
-Mat4f_t mat4f_scalar(float f)
-{
-    Mat4f_t mat;
-    mat4f_scalar_r(&mat, f);
-    return mat;
-}
 
 Mat4f_t* mat4f_zero_r(Mat4f_t *__restrict m)
 {
@@ -66,13 +53,6 @@ Mat4f_t* mat4f_zero_r(Mat4f_t *__restrict m)
 #endif
 }
 
-Mat4f_t mat4f_zero()
-{
-    Mat4f_t mat;
-    mat4f_zero_r(&mat);
-    return mat;
-}
-
 Mat4f_t* mat4f_identity_r(Mat4f_t *__restrict m)
 {
     mat4f_zero_r(m);
@@ -81,13 +61,6 @@ Mat4f_t* mat4f_identity_r(Mat4f_t *__restrict m)
     m->m[10] = 1.f;
     m->m[15] = 1.f;
     return m;
-}
-
-Mat4f_t mat4f_identity()
-{
-    Mat4f_t mat;
-    mat4f_identity_r(&mat);
-    return mat;
 }
 
 Mat4f_t* mat4f_add_r(Mat4f_t *out, const Mat4f_t *m2)
@@ -117,13 +90,6 @@ Mat4f_t* mat4f_add_r(Mat4f_t *out, const Mat4f_t *m2)
     return out;
 }
 
-Mat4f_t mat4_add(const Mat4f_t* m1, const Mat4f_t* m2) 
-{
-    Mat4f_t mout = mat4f_clone(m1);
-    mat4f_add_r(&mout, m2);
-    return mout;
-}
-
 Mat4f_t* mat4f_sub_r(Mat4f_t *out, const Mat4f_t *m2)
 {
     for(int i = 0; i<MAT_SIZE; i+=MAT_DIM) {
@@ -151,13 +117,6 @@ Mat4f_t* mat4f_sub_r(Mat4f_t *out, const Mat4f_t *m2)
     return out;
 }
 
-Mat4f_t mat4_sub(const Mat4f_t* m1, const Mat4f_t* m2) 
-{
-    Mat4f_t mout = mat4f_clone(m1);
-    mat4f_sub_r(&mout, m2);
-    return mout;
-}
-
 Mat4f_t* mat4f_scale_r(Mat4f_t *__restrict out, float scalar)
 {
     for(int i = 0; i<MAT_SIZE; i+=MAT_DIM) {
@@ -179,13 +138,6 @@ Mat4f_t* mat4f_scale_r(Mat4f_t *__restrict out, float scalar)
 #endif
     }
     return out;
-}
-
-Mat4f_t mat4f_scale(const Mat4f_t *__restrict m, float scalar)
-{
-    Mat4f_t mout = mat4f_clone(m);
-    mat4f_scale_r(&mout, scalar);
-    return mout;
 }
 
 Mat4f_t* mat4f_mul_r(Mat4f_t* out, const Mat4f_t* m2)
@@ -243,13 +195,6 @@ Mat4f_t* mat4f_mul_r(Mat4f_t* out, const Mat4f_t* m2)
 #endif
     }
     return out;
-}
-
-Mat4f_t mat4f_mul(const Mat4f_t* m1, const Mat4f_t* m2)
-{
-    Mat4f_t mout = mat4f_clone(m1);
-    mat4f_mul_r(&mout, m2);
-    return mout;
 }
 
 Mat4f_t* mat4f_tpo_r(Mat4f_t *__restrict out)
@@ -320,13 +265,6 @@ Mat4f_t* mat4f_tpo_r(Mat4f_t *__restrict out)
     return out;    
 }
 
-Mat4f_t mat4f_tpo(const Mat4f_t *restrict m)
-{
-    Mat4f_t res = mat4f_clone(m);
-    mat4f_tpo_r(&res);
-    return res;
-}
-
 float mat4f_det(const Mat4f_t* m)
 {
     const float* const a = m->m;
@@ -376,11 +314,4 @@ Mat4f_t* mat4f_inv_r(Mat4f_t* __restrict m)
     m->m[15] = (a[0] * (a[5]*a[10] - a[6]*a[9]) - a[4] * (a[1]*a[10] - a[2]*a[9]) + a[8] * (a[1]*a[6] - a[2]*a[5])) * invDet;
 
     return m;
-}
-
-Mat4f_t mat4f_inv(const Mat4f_t* m)
-{
-    Mat4f_t mout = mat4f_clone(m);
-    mat4f_inv_r(&mout);
-    return mout;
 }
