@@ -329,7 +329,7 @@ Mat4f_t mat4f_tpo(const Mat4f_t *restrict m)
 
 float mat4f_det(const Mat4f_t* m)
 {
-    const float* a = m->m;
+    const float* const a = m->m;
 
     float det;
     det =
@@ -341,14 +341,46 @@ float mat4f_det(const Mat4f_t* m)
     return det;
 }
 
+Mat4f_t* mat4f_inv_r(Mat4f_t* __restrict m)
+{
+    const float det = mat4f_det(m);
+
+    if (fabsf(det) < FLT_EPSILON)
+    {
+        mat4f_identity_r(m);
+        return m;
+    }
+
+    const float invDet = 1.f / det;
+    const Mat4f_t mclone = mat4f_clone(m);
+    const float* const a = mclone.m;
+
+    m->m[0] =  (a[5] * (a[10]*a[15] - a[11]*a[14]) - a[9] * (a[6]*a[15] - a[7]*a[14]) + a[13] * (a[6]*a[11] - a[7]*a[10])) * invDet;
+    m->m[1] = -(a[1] * (a[10]*a[15] - a[11]*a[14]) - a[9] * (a[2]*a[15] - a[3]*a[14]) + a[13] * (a[2]*a[11] - a[3]*a[10])) * invDet;
+    m->m[2] =  (a[1] * (a[6]*a[15] - a[7]*a[14]) - a[5] * (a[2]*a[15] - a[3]*a[14]) + a[13] * (a[2]*a[7] - a[3]*a[6])) * invDet;
+    m->m[3] = -(a[1] * (a[6]*a[11] - a[7]*a[10]) - a[5] * (a[2]*a[11] - a[3]*a[10]) + a[9] * (a[2]*a[7] - a[3]*a[6])) * invDet;
+
+    m->m[4] = -(a[4] * (a[10]*a[15] - a[11]*a[14]) - a[8] * (a[6]*a[15] - a[7]*a[14]) + a[12] * (a[6]*a[11] - a[7]*a[10])) * invDet;
+    m->m[5] =  (a[0] * (a[10]*a[15] - a[11]*a[14]) - a[8] * (a[2]*a[15] - a[3]*a[14]) + a[12] * (a[2]*a[11] - a[3]*a[10])) * invDet;
+    m->m[6] = -(a[0] * (a[6]*a[15] - a[7]*a[14]) - a[4] * (a[2]*a[15] - a[3]*a[14]) + a[12] * (a[2]*a[7] - a[3]*a[6])) * invDet;
+    m->m[7] =  (a[0] * (a[6]*a[11] - a[7]*a[10]) - a[4] * (a[2]*a[11] - a[3]*a[10]) + a[8] * (a[2]*a[7] - a[3]*a[6])) * invDet;
+
+    m->m[8] =  (a[4] * (a[9]*a[15] - a[11]*a[13]) - a[8] * (a[5]*a[15] - a[7]*a[13]) + a[12] * (a[5]*a[11] - a[7]*a[9])) * invDet;
+    m->m[9] = -(a[0] * (a[9]*a[15] - a[11]*a[13]) - a[8] * (a[1]*a[15] - a[3]*a[13]) + a[12] * (a[1]*a[11] - a[3]*a[9])) * invDet;
+    m->m[10] = (a[0] * (a[5]*a[15] - a[7]*a[13]) - a[4] * (a[1]*a[15] - a[3]*a[13]) + a[12] * (a[1]*a[7] - a[3]*a[5])) * invDet;
+    m->m[11] = -(a[0] * (a[5]*a[11] - a[7]*a[9]) - a[4] * (a[1]*a[11] - a[3]*a[9]) + a[8] * (a[1]*a[7] - a[3]*a[5])) * invDet;
+
+    m->m[12] = -(a[4] * (a[9]*a[14] - a[10]*a[13]) - a[8] * (a[5]*a[14] - a[6]*a[13]) + a[12] * (a[5]*a[10] - a[6]*a[9])) * invDet;
+    m->m[13] = (a[0] * (a[9]*a[14] - a[10]*a[13]) - a[8] * (a[1]*a[14] - a[2]*a[13]) + a[12] * (a[1]*a[10] - a[2]*a[9])) * invDet;
+    m->m[14] = -(a[0] * (a[5]*a[14] - a[6]*a[13]) - a[4] * (a[1]*a[14] - a[2]*a[13]) + a[12] * (a[1]*a[6] - a[2]*a[5])) * invDet;
+    m->m[15] = (a[0] * (a[5]*a[10] - a[6]*a[9]) - a[4] * (a[1]*a[10] - a[2]*a[9]) + a[8] * (a[1]*a[6] - a[2]*a[5])) * invDet;
+
+    return m;
+}
+
 Mat4f_t mat4f_inv(const Mat4f_t* m)
 {
     Mat4f_t mout = mat4f_clone(m);
     mat4f_inv_r(&mout);
     return mout;
-}
-
-Mat4f_t* mat4f_inv_r(Mat4f_t* __restrict m)
-{
-    return m;
 }

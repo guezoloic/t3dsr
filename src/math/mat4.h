@@ -2,7 +2,7 @@
 #define MATRIX4_H
 
 #include <math.h>
-#include <string.h>
+#include <float.h>
 
 #if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) 
     #define SIMD_X86
