@@ -1,21 +1,13 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 
-#include <math.h>
-#include <float.h>
-
 #if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) 
     #define SIMD_X86
-    #define SIMD_ENABLE
-    #include <xmmintrin.h>
 
 #elif defined(__aarch64__) || defined(__arm64__) || defined(_M_ARM64)
     #define SIMD_ARCH
-    #define SIMD_ENABLE
-    #include <arm_neon.h>
 
 #else
-    #define SIMD_NONE
 #endif
 
 #ifdef _MSC_VER
@@ -58,10 +50,7 @@ Vec4f_t vec4f_scale(Vec4f_t a, float scale);
 
 float vec4f_dot(Vec4f_t a, Vec4f_t b);
 
-inline static float vec4f_len(Vec4f_t v)
-{
-    return sqrtf(vec4f_dot(v, v));
-}
+float vec4f_len(Vec4f_t v);
 
 Vec4f_t* vec4f_norm_r(Vec4f_t *__restrict v);
 Vec4f_t vec4f_norm(Vec4f_t v);

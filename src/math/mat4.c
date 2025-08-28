@@ -1,5 +1,14 @@
 #include "mat4.h"
 
+#include <math.h>
+#include <float.h>
+
+#ifdef SIMD_X86
+    #include <xmmintrin.h>
+#elif defined(SIMD_ARCH)
+    #include <arm_neon.h>
+#endif
+
 Mat4f_t* mat4f_from_array_r(Mat4f_t *__restrict m, const float arr[16])
 {
     for(int i = 0; i<MAT_SIZE; i+=MAT_DIM) {

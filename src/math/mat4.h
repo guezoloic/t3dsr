@@ -1,20 +1,13 @@
 #ifndef MATRIX4_H
 #define MATRIX4_H
 
-#include <math.h>
-#include <float.h>
-
 #define MAT_SIZE 16
 #define MAT_DIM 4
 
 #if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) 
     #define SIMD_X86
-    #include <xmmintrin.h>
-
 #elif defined(__aarch64__) || defined(__arm64__) || defined(_M_ARM64)
     #define SIMD_ARCH
-    #include <arm_neon.h>
-
 #else
 #endif
 

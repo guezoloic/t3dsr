@@ -8,21 +8,16 @@
 #ifndef vec3_h
 #define vec3_h
 
-#include <math.h>
-#include <float.h>
 
 #if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) 
     #define SIMD_X86
-    #define SIMD_ENABLE
     #include <xmmintrin.h>
 
 #elif defined(__aarch64__) || defined(__arm64__) || defined(_M_ARM64)
     #define SIMD_ARCH
-    #define SIMD_ENABLE
     #include <arm_neon.h>
 
 #else
-    #define SIMD_NONE
 #endif
 
 #ifdef _MSC_VER
@@ -61,10 +56,7 @@ Vec3f_t vec3f_scale(Vec3f_t a, float scale);
 
 float vec3f_dot(Vec3f_t a, Vec3f_t b);
 
-inline static float vec3f_len(Vec3f_t v)
-{
-    return sqrtf(vec3f_dot(v, v));
-}
+float vec3f_len(Vec3f_t v);
 
 Vec3f_t* vec3f_norm_r(Vec3f_t *__restrict v);
 Vec3f_t vec3f_norm(Vec3f_t v);

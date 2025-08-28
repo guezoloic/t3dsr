@@ -1,5 +1,15 @@
 #include "vec4.h"
 
+#include <math.h>
+#include <float.h>
+
+#ifdef SIMD_X86
+    #include <xmmintrin.h>
+#elif defined(SIMD_ARCH)
+    #include <arm_neon.h>
+#endif
+
+
 Vec4f_t vec4f(float x, float y, float z, float w) 
 {
     return (Vec4f_t){.x = x, .y = y, .z = z, .w = w};
@@ -160,6 +170,12 @@ float vec4f_dot(Vec4f_t a, Vec4f_t b)
     return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 #endif
 }
+
+float vec4f_len(Vec4f_t v)
+{
+    return sqrtf(vec4f_dot(v, v));
+}
+
 
 Vec4f_t* vec4f_norm_r(Vec4f_t *__restrict v)
 {

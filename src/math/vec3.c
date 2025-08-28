@@ -1,5 +1,15 @@
 #include "vec3.h"
 
+#include <math.h>
+#include <float.h>
+
+#ifdef SIMD_X86
+    #include <xmmintrin.h>
+#elif defined(SIMD_ARCH)
+    #include <arm_neon.h>
+#endif
+
+
 Vec3f_t vec3f(float x, float y, float z)
 {
     Vec3f_t vec = {.x = x, .y = y, .z = z};
@@ -158,6 +168,11 @@ float vec3f_dot(Vec3f_t a, Vec3f_t b)
 #else
     return a.x * b.x + a.y * b.y + a.z * b.z;
 #endif
+}
+
+float vec3f_len(Vec3f_t v)
+{
+    return sqrtf(vec3f_dot(v, v));
 }
 
 Vec3f_t* vec3f_norm_r(Vec3f_t *__restrict v)
