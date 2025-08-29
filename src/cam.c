@@ -60,3 +60,45 @@ Mat4f_t lookAt(Vec4f_t* eye, Vec4f_t* center, Vec4f_t* up)
 
     return mat4f_from_array(m);
 }
+
+Mat4f_t rotateX(float angle)
+{
+    Mat4f_t r = mat4f_identity();
+    float c = cosf(angle);
+    float s = sinf(angle);
+
+    r.m[5] = c;
+    r.m[6] = -s;
+    r.m[9] = s;
+    r.m[10] = c;
+
+    return r;
+}
+
+Mat4f_t rotateY(float angle)
+{
+    Mat4f_t r = mat4f_identity();
+    float c = cosf(angle);
+    float s = sinf(angle);
+
+    r.m[0] = c;
+    r.m[2] = s;
+    r.m[8] = -s;
+    r.m[10] = c;
+
+    return r;
+}
+
+Mat4f_t rotateZ(float angle)
+{
+    Mat4f_t r = mat4f_identity();
+    float c = cosf(angle);
+    float s = sinf(angle);
+
+    r.m[0] = c;
+    r.m[1] = -s;
+    r.m[4] = s;
+    r.m[5] = c;
+
+    return r;
+}
