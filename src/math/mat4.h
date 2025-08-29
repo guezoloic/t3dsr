@@ -4,24 +4,29 @@
 #define MAT_SIZE 16
 #define MAT_DIM 4
 
+#ifndef SIMD 
 #if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) 
     #define SIMD_X86
+
 #elif defined(__aarch64__) || defined(__arm64__) || defined(_M_ARM64)
     #define SIMD_ARCH
+
 #else
+#endif
+#define SIMD
 #endif
 
 #ifdef _MSC_VER
-    #define ALIGN16 __declspec(align(MAT_SIZE))
+    #define ALIGN16_MAT __declspec(align(MAT_SIZE))
 #else
-    #define ALIGN16 __attribute__((aligned(MAT_SIZE)))
+    #define ALIGN16_MAT __attribute__((aligned(MAT_SIZE)))
 #endif
 
 
 typedef struct 
 {
     float m[MAT_SIZE];
-} ALIGN16 Mat4f_t;
+} ALIGN16_MAT Mat4f_t;
 
 Mat4f_t* mat4f_from_array_r(Mat4f_t *__restrict m, const float arr[MAT_SIZE]);
 

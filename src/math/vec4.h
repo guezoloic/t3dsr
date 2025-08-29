@@ -1,6 +1,7 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 
+#ifndef SIMD 
 #if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) 
     #define SIMD_X86
 
@@ -9,11 +10,16 @@
 
 #else
 #endif
+#define SIMD
+#endif
 
+
+#ifndef ALIGN16_VEC
 #ifdef _MSC_VER
-    #define ALIGN16 __declspec(align(16))
+    #define ALIGN16_VEC __declspec(align(16))
 #else
-    #define ALIGN16 __attribute__((aligned(16)))
+    #define ALIGN16_VEC __attribute__((aligned(16)))
+#endif
 #endif
 
 #define VEC_SIZE 4
@@ -25,7 +31,7 @@ typedef union
 {
     struct { float x, y, z, w; };
     float data[VEC_SIZE];
-} ALIGN16 Vec4f_t;
+} ALIGN16_VEC Vec4f_t;
 
 Vec4f_t vec4f_from_array(const float *__restrict val);
 Vec4f_t vec4f(float x, float y, float z, float w);
@@ -65,6 +71,10 @@ Vec4f_t vec4f_proj(Vec4f_t a, Vec4f_t b);
 Vec4f_t vec4f_refl(Vec4f_t v, Vec4f_t normal);
 
 float vec4f_dist(Vec4f_t a, Vec4f_t b);
+
+Vec4f_t* vec4f_cross_r(Vec4f_t* __restrict out, Vec4f_t a, Vec4f_t b);
+
+Vec4f_t vec4f_cross(Vec4f_t a, Vec4f_t b);
 
 #undef VEC_SIZE
 

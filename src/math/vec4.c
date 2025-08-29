@@ -209,45 +209,61 @@ Vec4f_t vec4f_lerp(Vec4f_t a, Vec4f_t b, float t)
     return a;
 }
 
- float vec4f_angle(Vec4f_t a, Vec4f_t b)
- {
-     float lenA = vec4f_len(a);
-     float lenB = vec4f_len(b);
+float vec4f_angle(Vec4f_t a, Vec4f_t b)
+{
+    float lenA = vec4f_len(a);
+    float lenB = vec4f_len(b);
 
-     if (isnan(lenA) || isnan(lenB)
-         || lenA < FLT_EPSILON
-         || lenB < FLT_EPSILON)
-         return NAN;
+    if (isnan(lenA) || isnan(lenB)
+        || lenA < FLT_EPSILON
+        || lenB < FLT_EPSILON)
+        return NAN;
 
-     float dot = vec4f_dot(a, b);
-     float cosTheta = dot / (lenA * lenB);
+    float dot = vec4f_dot(a, b);
+    float cosTheta = dot / (lenA * lenB);
 
-     cosTheta = fmaxf(-1.f, fminf(cosTheta, 1.f));
+    cosTheta = fmaxf(-1.f, fminf(cosTheta, 1.f));
 
-     return acosf(cosTheta);
- }
+    return acosf(cosTheta);
+}
 
 
- Vec4f_t vec4f_proj(Vec4f_t a, Vec4f_t b)
- {
-     float dotA = vec4f_dot(a, b);
-     float dotB = vec4f_dot(b, b);
+Vec4f_t vec4f_proj(Vec4f_t a, Vec4f_t b)
+{
+    float dotA = vec4f_dot(a, b);
+    float dotB = vec4f_dot(b, b);
 
-     float scale = dotA / dotB;
-     return vec4f_scale(b, scale);
- }
+    float scale = dotA / dotB;
+    return vec4f_scale(b, scale);
+}
 
- Vec4f_t vec4f_refl(Vec4f_t v, Vec4f_t normal)
- {
-     Vec4f_t proj = vec4f_proj(v, normal);
-     Vec4f_t scal = vec4f_scale(proj, 2.f);
-     Vec4f_t rlt = vec4f_sub(v, scal);
-     return rlt;
- }
+Vec4f_t vec4f_refl(Vec4f_t v, Vec4f_t normal)
+{
+    Vec4f_t proj = vec4f_proj(v, normal);
+    Vec4f_t scal = vec4f_scale(proj, 2.f);
+    Vec4f_t rlt = vec4f_sub(v, scal);
+    return rlt;
+}
 
- float vec4f_dist(Vec4f_t a, Vec4f_t b)
- {
-     Vec4f_t vsub = vec4f_sub(a, b);
-     float rlt = vec4f_len(vsub);
-     return rlt;
- }
+float vec4f_dist(Vec4f_t a, Vec4f_t b)
+{
+    Vec4f_t vsub = vec4f_sub(a, b);
+    float rlt = vec4f_len(vsub);
+    return rlt;
+}
+
+Vec4f_t* vec4f_cross_r(Vec4f_t* __restrict out, Vec4f_t a, Vec4f_t b)
+{
+    out->x = a.y * b.z - a.z * b.y;
+    out->y = a.z * b.x - a.x * b.z;
+    out->z = a.x * b.y - a.y * b.x;
+    out->w = 0.f;
+    return out;
+}
+
+Vec4f_t vec4f_cross(Vec4f_t a, Vec4f_t b)
+{
+    Vec4f_t out;
+    vec4f_cross_r(&out, a, b);
+    return out;
+}

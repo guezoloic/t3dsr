@@ -34,3 +34,29 @@ Vec4f_t* viewport_r(Vec4f_t* vec, float width, float height)
     vec->y = (1.f - vec->y) * 0.5f * height;
     return vec;
 }
+
+Mat4f_t lookAt(Vec4f_t* eye, Vec4f_t* center, Vec4f_t* up)
+{
+    Vec4f_t f = vec4f_sub(*center, *eye);
+    f.data[3] = 0.f;
+    f = vec4f_scale(f, 1.f / vec4f_len(f));
+
+    Vec4f_t s = vec4f_cross(f, *up);
+    s.data[3] = 0.f;
+    s = vec4f_scale(s, 1.f / vec4f_len(s));
+
+    Vec4f_t u = vec4f_cross(s, f);
+    u.data[3] = 0.f;
+
+    const float m[16] = {
+        s.x,  u.x,  -f.x,  0.f,
+        s.y,  u.y,  -f.y,  0.f,
+        s.z,  u.z,  -f.z,  0.f,
+       -vec4f_dot(s, *eye),
+       -vec4f_dot(u, *eye),
+        vec4f_dot(f, *eye),
+        1.f
+    };
+
+    return mat4f_from_array(m);
+}
