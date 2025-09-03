@@ -5,14 +5,14 @@
 
 Mat4f_t perspCam(float fov, float asp, float near, float far)
 {
-    const float t = 1.f / tanf(fov*0.5f);
-    const float fn = near - far;
+    const float t = 1.f / tanf(fov * 0.5f * (M_PI/180.f));
+    const float fn = far - near;
     const float persp[16] = 
     {
         t/asp,  0.f, 0.f,                               0.f, 
         0.f,    t,   0.f,                               0.f,
-        0.f,    0.f, (far + near) / fn,                 -1.f,
-        0.f,    0.f, (2.f * far * near) / fn,           0.f
+        0.f,    0.f, -(far + near) / fn,                 -1.f,
+        0.f,    0.f, -(2.f * far * near) / fn,           0.f
     };
 
     return mat4f_from_array(persp);
@@ -48,14 +48,11 @@ Mat4f_t lookAt(Vec4f_t* eye, Vec4f_t* center, Vec4f_t* up)
     Vec4f_t u = vec4f_cross(s, f);
     u.data[3] = 0.f;
 
-    const float m[16] = {
-        s.x,  u.x,  -f.x,  0.f,
-        s.y,  u.y,  -f.y,  0.f,
-        s.z,  u.z,  -f.z,  0.f,
-       -vec4f_dot(s, *eye),
-       -vec4f_dot(u, *eye),
-        vec4f_dot(f, *eye),
-        1.f
+    float m[16] = {
+        s.x,  s.y,  s.z,  -vec4f_dot(s, *eye),
+        u.x,  u.y,  u.z,  -vec4f_dot(u, *eye),
+        -f.x, -f.y, -f.z, -vec4f_dot(f, *eye),
+        0.f,   0.f,  0.f,                 1.f
     };
 
     return mat4f_from_array(m);
