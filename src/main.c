@@ -10,19 +10,25 @@ int main(int argc, const char** argv)
     const float near = 0.1, far = 1000;
 
     const float aspect = width / height;
-
-    // xyz = [-1; 1]
-    Vec4f_t vec = vec4f(0.f, 0.f, -1.f, 1.f);
+    
     Mat4f_t proj = perspCam(fov, aspect, near, far);
 
-    Vec4f_t v_clip = mat4f_mul_vec4f(proj, vec);
+    // xyz = [-1; 1]
+    Vec4f_t vec0 = vec4f(0.f, 0.f, -1.f, 1.f);
+    Vec4f_t v_clip0 = mat4f_mul_vec4f(proj, vec0);
+    normCoord_r(&v_clip0);
+    viewport_r(&v_clip0, width, height);
 
-    normCoord_r(&v_clip);
-    viewport_r(&v_clip, width, height);
+    Vec4f_t vec1 = vec4f(0.f, 0.6f, -1.f, 1.f);
+    Vec4f_t v_clip1 = mat4f_mul_vec4f(proj, vec1);
+    normCoord_r(&v_clip1);
+    viewport_r(&v_clip1, width, height);
     
     initCanvas(width, height);
-    drawCanvas(v_clip, width, height);
+    // drawCanvas(v_clip, width, height);
+    drawLine(v_clip0, v_clip1, width, height);
     renderCanvas(width, height);
-    printf("%f", v_clip.z);
+
+    freeCanvas();
     return 0;
 }

@@ -3,9 +3,13 @@
 
 #include <math.h>
 
+#ifndef M_PI // MSCV doesn't implement M_PI by default
+    #define M_PI 3.14159265358979323846
+#endif
+
 Mat4f_t perspCam(float fov, float asp, float near, float far)
 {
-    const float t = 1.f / tanf(fov * 0.5f * (M_PI/180.f));
+    const float t = 1.f / tanf(fov * 0.5f * (float)(M_PI/180.));
     const float fn = far - near;
     const float persp[16] = 
     {
