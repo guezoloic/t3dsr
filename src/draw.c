@@ -24,9 +24,15 @@ void editCanvas(int width, int height)
 
 static char drawPixel(float zBuffer)
 {
-    if (zBuffer < 0.25f) return '.';
-    else if (zBuffer < 0.5f) return '*';
-    else if (zBuffer < 0.75f) return 'o';
+    float zb = (zBuffer + 1.f) * 0.5f;
+    
+    if (zb > 1.f) zb = 1.f;
+    if (zb < 0.f) zb = 0.f;
+
+
+    if (zb < 0.25f) return '.';
+    else if (zb < 0.5f) return '*';
+    else if (zb < 0.75f) return 'o';
     else return '#';
 }
 
@@ -78,6 +84,16 @@ void renderCanvas(int width, int height)
             putchar(canvas[i*width+j]);
         }
         putchar('\n');
+    }
+}
+
+void clearCanvas(int width, int height)
+{
+    printf("\033[2J\033[H");
+    for (int i = 0; i<height; i++) {
+        for (int j = 0; j<width; j++) {
+            canvas[i*width + j] = ' ';
+        }
     }
 }
 
