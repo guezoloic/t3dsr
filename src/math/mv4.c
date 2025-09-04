@@ -12,19 +12,20 @@ Vec4f_t mat4f_mul_vec4f(const Mat4f_t mat, Vec4f_t v)
     Vec4f_t out;
 #if defined (SIMD_X86)
     __m128 vec = _mm_load_ps(v.data);
-    
-    for (int i = 0; i < 4; i++) 
-    {
-        __m128 row = _mm_load_ps(&mat.m[4*i]);
-        __m128 mul = _mm_mul_ps(row, vec);
 
-        __m128 shuf = _mm_movehl_ps(mul, mul);
+    for (int i = 0; i < 4; i++)
+    {
+        __m128 row = _mm_load_ps(&mat.m[i * 4]);
+        __m128 mul = _mm_mul_ps(row, vec);
+        
+        __m128 shuf = _mm_shuffle_ps(mul, mul, _MM_SHUFFLE(2, 3, 0, 1)); // [y z y z]
         __m128 sum = _mm_add_ps(mul, shuf);
-        shuf = _mm_movehl_ps(shuf, sum);
+        shuf = _mm_shuffle_ps(sum, sum, _MM_SHUFFLE(1, 0, 3, 2)); 
         sum = _mm_add_ss(sum, shuf);
 
         out.data[i] = _mm_cvtss_f32(sum);
     }
+
 
 #elif defined (SIMD_ARCH)
     float32x4_t vec = vld1q_f32(v.data);
